@@ -1,0 +1,69 @@
+### File system
+.DS_Store
+*_BAK*
+*.LCK
+*.TMP
+*.local
+
+### Intellij ignores
+
+# Directory-based project format
+.idea/
+
+# File-based project format
+*.ipr
+*.iml
+*.iws
+
+# Additional for IntelliJ
+out/
+target/
+
+# Debug Setup
+web.xml
+
+
+
+### Eclipse ignores
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.project
+.classpath
+*.prefs
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# TeXlipse plugin
+.texlipse
+
+# vlt files
+*.vlt
+
+# less/css directories
+generated/
+
+build.bat
+build163.bat

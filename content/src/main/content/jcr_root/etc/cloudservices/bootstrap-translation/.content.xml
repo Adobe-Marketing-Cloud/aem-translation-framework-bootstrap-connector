@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:lastModified="{Date}2012-01-10T16:53:07.216+01:00"
+        cq:lastModifiedBy="admin"
+        cq:template="/apps/bootstrap-connector/templates/bootstrap-connector-servicepage"
+        jcr:description="Bootstrap translation connector desciption"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="Bootstrap Connector"
+        sling:resourceType="cq/cloudserviceconfigs/components/servicepage"
+        descriptionExtended="Bootstrap Connector description extended."
+        description="Translate with Bootstrap Connector."
+        inclusionRank="{Long}202"
+        ranking="10"
+        allowMultiple="{Boolean}true"
+        serviceAdminUrl="http://www.adobe.com/bootstrap-connector/getting-started"
+        serviceUrl="http://www.adobe.com/bootstrap-connector/learn-more"
+        serviceUrlLabel="Bootstrap Connector"
+        thumbnailPath="/apps/bootstrap-connector/templates/bootstrap-connector-servicepage/thumbnail.png"/>
+</jcr:root>
