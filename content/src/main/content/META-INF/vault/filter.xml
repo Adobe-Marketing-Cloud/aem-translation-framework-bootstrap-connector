@@ -2,6 +2,7 @@
 <workspaceFilter version="1.0">
     <filter root="/apps/bootstrap-connector/components/"/>
     <filter root="/apps/bootstrap-connector/templates/"/>
+	<filter root="/apps/bootstrap-connector/config/"/>
     <filter root="/etc/cloudservices/bootstrap-translation" mode="update"/>
     <filter root="/apps/bootstrap-connector/install"/>
 </workspaceFilter>
