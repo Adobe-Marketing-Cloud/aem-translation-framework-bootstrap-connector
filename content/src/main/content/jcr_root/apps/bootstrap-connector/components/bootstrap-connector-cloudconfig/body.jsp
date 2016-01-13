@@ -38,7 +38,8 @@
 %><body>
 <div><cq:include path="trail" resourceType="cq/cloudserviceconfigs/components/trail"/></div>
 <p class="cq-clear-for-ie7"></p>
-<h1><%= title %></h1>
+<h1 style="padding-top: 15px;"><%= title %></h1>
+
 <p><%= description %></p>
 <div>
     <script type="text/javascript">
@@ -79,5 +80,12 @@
     </script>
 </div>
 <cq:include script="content.jsp" />
-<p>&nbsp;</p>
+    <%
+        if (properties.get("dummyserverurl", "").isEmpty()
+                || properties.get("dummyconfigid", "").isEmpty()) {
+    %>
+    <cq:include script="opendialog.jsp" />
+    <%
+        }
+    %>
 </body>
