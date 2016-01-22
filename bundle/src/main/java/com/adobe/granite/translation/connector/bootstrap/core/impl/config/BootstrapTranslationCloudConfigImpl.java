@@ -27,6 +27,7 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
 
     private String dummyServerUrl;
     private String dummyConfigId;
+    private String previewPath;
 
     public BootstrapTranslationCloudConfigImpl(Resource translationConfigResource) throws TranslationException {
         log.info("BootstrapTranslationCloudConfigImpl.");
@@ -43,11 +44,14 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
 
             this.dummyServerUrl = properties.get(PROPERTY_DUMMY_SERVER_URL, "");
             this.dummyConfigId = properties.get(PROPERTY_DUMMY_CONFIG_ID, "");
+            this.previewPath = properties.get(PROPERTY_PREVIEW_PATH, ""); 
 
             if (log.isDebugEnabled()) {
                 log.debug("Created Bootstrap Cloud Config with the following:");
                 log.debug("dummyServerUrl: {}", dummyServerUrl);
                 log.debug("dummyConfigId: {}", dummyConfigId);
+                log.debug("previewPath: {}", previewPath);
+                
             }
         } else {
             throw new TranslationException("Error getting Cloud Config credentials",
@@ -63,5 +67,10 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
     public String getDummyConfigId() {
         log.info("BootstrapTranslationCloudConfigImpl.getDummyConfigId");
         return dummyConfigId;
+    }
+    
+    public String getPreviewPath(){
+        log.info("BootstrapTranslationCloudConfigImpl.gePreviewPath");
+        return previewPath;
     }
 }

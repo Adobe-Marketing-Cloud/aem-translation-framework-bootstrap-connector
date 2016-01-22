@@ -24,7 +24,7 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 @Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true)
 @Properties(value = {
     @Property(name = "service.description", value = "Bootstrap translation service"),
-    @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "bootstrap",
+    @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "Bootstrap Connector",
             label = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this "
                     + "Translation Factory Connector")})
 public class BootstrapTranslationServiceFactoryImpl implements TranslationServiceFactory {
@@ -59,6 +59,9 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     
     @Reference
     CryptoSupport cryptoSupport;
+    
+    @Reference
+    ResourceResolverFactory resourceResolverFactory;
 
     private List<TranslationMethod> supportedTranslationMethods;
 
@@ -85,11 +88,13 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         String dummyConfigId = "";
         String dummyServerUrl = "";
-
+        String previewPath = "";
+        
         if (bootstrapCloudConfg != null)
         {
             dummyConfigId = bootstrapCloudConfg.getDummyConfigId();
             dummyServerUrl = bootstrapCloudConfg.getDummyServerUrl();
+            previewPath = bootstrapCloudConfg.getPreviewPath();
             
         }
         
@@ -107,8 +112,8 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
-        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, dummyConfigId, dummyServerUrl,
-             translationConfig);
+        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, dummyConfigId, dummyServerUrl, previewPath,
+             translationConfig, resourceResolverFactory);
     }
 
     @Override

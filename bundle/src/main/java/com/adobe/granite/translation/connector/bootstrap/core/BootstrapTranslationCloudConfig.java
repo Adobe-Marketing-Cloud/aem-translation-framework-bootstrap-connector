@@ -17,6 +17,7 @@ public interface BootstrapTranslationCloudConfig {
 
     public static final String PROPERTY_DUMMY_SERVER_URL = "dummyserverurl";
     public static final String PROPERTY_DUMMY_CONFIG_ID = "dummyconfigid";
+    public static final String PROPERTY_PREVIEW_PATH = "previewPath";
 
     public static final String RESOURCE_TYPE = "bootstrap-connector/components/bootstrap-connector-cloudconfig";
     public static final String ROOT_PATH = "/etc/cloudservices/bootstrap-translation";
@@ -25,4 +26,5 @@ public interface BootstrapTranslationCloudConfig {
 
     String getDummyConfigId();
    
+    String getPreviewPath();
 }

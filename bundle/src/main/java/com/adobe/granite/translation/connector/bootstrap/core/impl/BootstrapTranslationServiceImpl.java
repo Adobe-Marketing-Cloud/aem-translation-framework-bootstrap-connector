@@ -13,13 +13,31 @@ written permission of Adobe.
 
 package com.adobe.granite.translation.connector.bootstrap.core.impl;
 
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +61,20 @@ import com.adobe.granite.translation.core.common.TranslationResultImpl;
 
 public class BootstrapTranslationServiceImpl extends AbstractTranslationService implements TranslationService {
     private static final Logger log = LoggerFactory.getLogger(BootstrapTranslationServiceImpl.class);
+    
+    private static final String TAG_METADATA = "/tag-metadata";
+    
+    private static final String ASSET_METADATA = "/asset-metadata";
 
+    private static final String I18NCOMPONENTSTRINGDICT = "/i18n-dictionary";
+    private static final String UTF_8_ENCODING = "UTF-8";
     private static final String SERVICE_LABEL = "bootstrap";
     private static final String SERVICE_ATTRIBUTION = "Translation By Bootstrap";
     private String dummyConfigId = "";
     private String dummyServerUrl = "";
-    
+    private String previewPath = "";
+    private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
+    Session session = null;
 
     class TranslationJobDetails {
         String strName;
@@ -86,27 +112,43 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         public Map<String, String> getFinalScope() {
             log.info("TranslationScopeImpl.getFinalScope");
 
-            Map<String, String> newScope = new HashMap<String, String>();
-            newScope.put("asdasd", "asdasdasddasdasd");
-            newScope.put("souosj", "sfhas hldg lkdsjg");
-            newScope.put("12fska f", "asjfa slkfjkasjfkl ajdgk;");
+            Map<String, String> newScope = new LinkedHashMap<String, String>();
+            newScope.put("ICE Words", "0");
+            newScope.put("100% Words", "0");
+            newScope.put("New Words", "85");
+            newScope.put("Repeated Words", "0");
+            newScope.put("TranslationScope:CostEstimate", "USD 150.00");
+            newScope.put("TranslationScope:DetailsLink","https://github.com/Adobe-Marketing-Cloud/aem-translation-framework-bootstrap-connector");
+
             return newScope;
         }
     }
 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
-        Map<String, String> availableCategoryMap, String name, String dummyConfigId, String dummyServerUrl,
-        TranslationConfig translationConfig) {
+        Map<String, String> availableCategoryMap, String name, String dummyConfigId, String dummyServerUrl, String previewPath,
+        TranslationConfig translationConfig, ResourceResolverFactory resourceResolverFactory) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
 
         log.info("BootstrapTranslationServiceImpl.");
         log.info("dummyConfigId: " + dummyConfigId);
         log.info("dummyServerUrl: " + dummyServerUrl);
+        log.info("previewPath: " + previewPath);
 
+
+        try {
+            ResourceResolver resolver = resourceResolverFactory.getServiceResourceResolver(
+                    Collections.singletonMap(ResourceResolverFactory.SUBSERVICE,
+                            (Object) BOOTSTRAP_SERVICE));
+            session = resolver.adaptTo(Session.class);
+        } catch (LoginException e) {
+            log.error("Login Exception",e);
+        }
+           
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
+        this.previewPath = previewPath;
     }
 
     @Override
@@ -199,8 +241,22 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         String strTargetLanguage, Date dueDate, TranslationState state, TranslationMetadata jobMetadata)
         throws TranslationException {
         log.info("BootstrapTranslationServiceImpl.createTranslationJob");
-
-        return "sampleTranslationJob";
+        // Just cleaning up the name to remove the extra spaces and square brackets
+        name = name.toLowerCase().replaceAll("\\s", "-").replaceAll("\\[.*\\]_", "");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd'/"+name+"'");
+        Date date = new Date();
+        String translationJobName = "/var/bootstrap-tms/"+formatter.format(date);
+        log.info("Job Name: {}", translationJobName);
+        Node jcrNode;
+        try {
+            jcrNode = JcrResourceUtil.createPath(translationJobName, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
+            JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", dueDate.toString());
+            session.save();
+        } catch (RepositoryException e) {
+            log.error("Repository Exception",e);
+        }
+        return translationJobName;
+        
     }
 
     @Override
@@ -219,8 +275,18 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus getTranslationJobStatus(String strTranslationJobID) throws TranslationException {
         log.info("BootstrapTranslationServiceImpl.getTranslationJobStatus");
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
+        
+        try {
+            Node jobNode = session.getNode(strTranslationJobID);
+            log.info("STATUS: {}",jobNode.getProperty("STATUS"));
+        } catch (PathNotFoundException e) {
+            e.printStackTrace();
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        
+        return TranslationStatus.SCOPE_COMPLETED;        
+        
     }
 
     @Override
@@ -248,10 +314,27 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public String uploadTranslationObject(String strTranslationJobID, TranslationObject translationObject)
         throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.uploadTranslationObject");
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
 
+        String objectPath = strTranslationJobID+getObjectPath(translationObject);
+        log.info("ObjectPath: {}",objectPath);
+        log.info("Preview Path: {}", previewPath+getObjectPath(translationObject));
+        try {
+            writePreview(translationObject,previewPath);
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        
+        Node jcrNode;
+        try {
+            jcrNode = JcrResourceUtil.createPath(objectPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
+            JcrResourceUtil.setProperty(jcrNode, "STATUS", TranslationStatus.TRANSLATION_IN_PROGRESS.toString());
+            session.save();
+        } catch (RepositoryException e) {
+            log.error("Repository Exception",e);
+        }
+        
+        return objectPath; 
     }
 
     @Override
@@ -264,8 +347,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus getTranslationObjectStatus(String strTranslationJobID,
         TranslationObject translationObject) throws TranslationException {
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
+            return TranslationConstants.TranslationStatus.TRANSLATION_IN_PROGRESS;
     }
 
     @Override
@@ -319,4 +401,51 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
     }
+
+    
+    private String getObjectPath (TranslationObject translationObject){
+        
+        if(translationObject.getTranslationObjectSourcePath()!= null && !translationObject.getTranslationObjectSourcePath().isEmpty()){
+            return  translationObject.getTranslationObjectSourcePath();
+        }
+        else if(translationObject.getTitle().equals("TAGMETADATA")){
+            return TAG_METADATA;
+        }
+        else if(translationObject.getTitle().equals("ASSETMETADATA")){
+            return ASSET_METADATA;
+        } 
+        else if(translationObject.getTranslationObjectTargetPath().equals("I18NCOMPONENTSTRINGDICT")){
+            return I18NCOMPONENTSTRINGDICT;
+        }
+        return null;
+    }    
+
+    @Override
+    public void updateDueDate(String strTranslationJobID, Date date)
+            throws TranslationException {
+            log.info("NEW DUE DATE:{}",date);
+    }
+    
+    private static void writePreview(TranslationObject translationObject, String strOutput) throws IOException  {
+
+           ZipInputStream zis = translationObject.getTranslationObjectPreview();
+           
+           ZipEntry entry;
+           while ((entry = zis.getNextEntry()) != null) {
+               log.info("Unzipping: {}", entry.getName());
+
+               int size;
+               byte[] buffer = new byte[2048];
+               log.info("ENTRY NAME: {}", entry.getName());
+               FileOutputStream fos = new FileOutputStream(entry.getName());
+               BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
+               while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
+                 bos.write(buffer, 0, size);
+               }
+               bos.flush();
+               bos.close();
+             }
+           zis.close();
+    }
+    
 }
