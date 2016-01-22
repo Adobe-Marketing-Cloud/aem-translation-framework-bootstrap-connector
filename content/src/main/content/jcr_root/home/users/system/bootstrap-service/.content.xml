@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+    jcr:primaryType="rep:SystemUser"
+    jcr:uuid="7a45f8ab-1a78-3eae-97f0-38fa4d4fea2b"
+    rep:authorizableId="bootstrap-service"
+    rep:principalName="bootstrap-service"/>

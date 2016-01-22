@@ -35,6 +35,10 @@
                         name="./dummyconfigid@Encrypted"
                         readOnly="false"
                         xtype="hidden"/>
+            <serviceattribution jcr:primaryType="cq:Widget" fieldLabel="Target Directory for Preview content:" name="./previewPath" xtype="textfield">
+                  <listeners jcr:primaryType="nt:unstructured" change="function(comp) {CQ.cloudservices.getEditOk().enable();}"/>
+            </serviceattribution>
+                        
             </items>
         </general>
     </items>
