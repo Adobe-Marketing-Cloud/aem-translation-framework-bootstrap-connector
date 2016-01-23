@@ -250,7 +250,9 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         Node jcrNode;
         try {
             jcrNode = JcrResourceUtil.createPath(translationJobName, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
-            JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", dueDate.toString());
+            if(dueDate !=null) {
+                JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", dueDate.toString());    
+            }
             session.save();
         } catch (RepositoryException e) {
             log.error("Repository Exception",e);
@@ -318,12 +320,12 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         String objectPath = strTranslationJobID+getObjectPath(translationObject);
         log.info("ObjectPath: {}",objectPath);
         log.info("Preview Path: {}", previewPath+getObjectPath(translationObject));
-        try {
-            writePreview(translationObject,previewPath);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+//        try {
+//            writePreview(translationObject,previewPath);
+//        } catch (IOException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
         
         Node jcrNode;
         try {
@@ -347,7 +349,20 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus getTranslationObjectStatus(String strTranslationJobID,
         TranslationObject translationObject) throws TranslationException {
-            return TranslationConstants.TranslationStatus.TRANSLATION_IN_PROGRESS;
+
+        String objectPath = strTranslationJobID+getObjectPath(translationObject);
+        String status = "";
+        try {
+            status = session.getNode(objectPath).getProperty("STATUS").getString();
+        } catch (PathNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+            return TranslationConstants.TranslationStatus.fromString(status);
     }
 
     @Override
@@ -414,7 +429,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         else if(translationObject.getTitle().equals("ASSETMETADATA")){
             return ASSET_METADATA;
         } 
-        else if(translationObject.getTranslationObjectTargetPath().equals("I18NCOMPONENTSTRINGDICT")){
+        else if(translationObject.getTitle().equals("I18NCOMPONENTSTRINGDICT")){
             return I18NCOMPONENTSTRINGDICT;
         }
         return null;
