@@ -60,7 +60,7 @@ public class BootstrapTranslationAdapterFactory implements AdapterFactory
         if (adaptable instanceof Node) {
             return getAdapter((Node) adaptable, type);
         }
-        log.debug("Unable to handle adaptable {}", adaptable.getClass().getName());
+        log.warn("Unable to handle adaptable {}", adaptable.getClass().getName());
         return null;
     }
 
@@ -87,12 +87,12 @@ public class BootstrapTranslationAdapterFactory implements AdapterFactory
             }
             catch (TranslationException te)
             {
-                log.info(te.getMessage(), te);
+                log.error(te.getMessage(), te);
                 return null;
             }
         }
 
-        log.debug("Unable to adapt to resource of type {}", type.getName());
+        log.warn("Unable to adapt to resource of type {}", type.getName());
         return null;
     }
 }

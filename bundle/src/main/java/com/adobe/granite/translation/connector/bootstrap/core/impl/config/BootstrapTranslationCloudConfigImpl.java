@@ -30,7 +30,7 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
     private String previewPath;
 
     public BootstrapTranslationCloudConfigImpl(Resource translationConfigResource) throws TranslationException {
-        log.info("BootstrapTranslationCloudConfigImpl.");
+        log.trace("BootstrapTranslationCloudConfigImpl.");
 
         Resource configContent;
         if (JcrConstants.JCR_CONTENT.equals(translationConfigResource.getName())) {
@@ -60,17 +60,17 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
     }
 
     public String getDummyServerUrl() {
-        log.info("BootstrapTranslationCloudConfigImpl.getDummyServerUrl");
+        log.trace("BootstrapTranslationCloudConfigImpl.getDummyServerUrl");
         return dummyServerUrl;
     }
 
     public String getDummyConfigId() {
-        log.info("BootstrapTranslationCloudConfigImpl.getDummyConfigId");
+        log.trace("BootstrapTranslationCloudConfigImpl.getDummyConfigId");
         return dummyConfigId;
     }
     
     public String getPreviewPath(){
-        log.info("BootstrapTranslationCloudConfigImpl.gePreviewPath");
+        log.trace("BootstrapTranslationCloudConfigImpl.gePreviewPath");
         return previewPath;
     }
 }

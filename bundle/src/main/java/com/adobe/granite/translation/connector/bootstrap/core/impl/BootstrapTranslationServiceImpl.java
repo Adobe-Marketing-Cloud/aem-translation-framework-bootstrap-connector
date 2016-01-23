@@ -86,7 +86,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     class TranslationScopeImpl implements TranslationScope {
         @Override
         public int getWordCount() {
-            log.info("TranslationScopeImpl.getWordCount");
+            log.trace("TranslationScopeImpl.getWordCount");
 
             Random rand = new Random();
             return rand.nextInt(100);
@@ -94,7 +94,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
         @Override
         public int getImageCount() {
-            log.info("TranslationScopeImpl.getImageCount");
+            log.trace("TranslationScopeImpl.getImageCount");
 
             Random rand = new Random();
             return rand.nextInt(100);
@@ -102,7 +102,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
         @Override
         public int getVideoCount() {
-            log.info("TranslationScopeImpl.getVideoCount");
+            log.trace("TranslationScopeImpl.getVideoCount");
 
             Random rand = new Random();
             return rand.nextInt(100);
@@ -110,7 +110,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
         @Override
         public Map<String, String> getFinalScope() {
-            log.info("TranslationScopeImpl.getFinalScope");
+            log.trace("TranslationScopeImpl.getFinalScope");
 
             Map<String, String> newScope = new LinkedHashMap<String, String>();
             newScope.put("ICE Words", "0");
@@ -131,10 +131,10 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
 
-        log.info("BootstrapTranslationServiceImpl.");
-        log.info("dummyConfigId: " + dummyConfigId);
-        log.info("dummyServerUrl: " + dummyServerUrl);
-        log.info("previewPath: " + previewPath);
+        log.trace("BootstrapTranslationServiceImpl.");
+        log.trace("dummyConfigId: " + dummyConfigId);
+        log.trace("dummyServerUrl: " + dummyServerUrl);
+        log.trace("previewPath: " + previewPath);
 
 
         try {
@@ -153,7 +153,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     @Override
     public Map<String, String> supportedLanguages() {
-        log.info("BootstrapTranslationServiceImpl.supportedLanguages");
+        log.trace("BootstrapTranslationServiceImpl.supportedLanguages");
 
         if (availableLanguageMap.size() <= 0) {
             availableLanguageMap.put("en", "en");
@@ -168,7 +168,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     @Override
     public boolean isDirectionSupported(String sourceLanguage, String targetLanguage) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.isDirectionSupported");
+        log.trace("BootstrapTranslationServiceImpl.isDirectionSupported");
         // It should return true, if translation provider provides translation from sourceLanguage to targetLanguage
 // otherwise false
         return true;
@@ -177,7 +177,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public String detectLanguage(String toDetectSource, TranslationConstants.ContentType contentType)
         throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.detectLanguage");
+        log.trace("BootstrapTranslationServiceImpl.detectLanguage");
 
         // French language code
         return "fr";
@@ -186,7 +186,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationResult translateString(String sourceString, String sourceLanguage, String targetLanguage,
         TranslationConstants.ContentType contentType, String contentCategory) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.translateString");
+        log.trace("BootstrapTranslationServiceImpl.translateString");
 
         String translatedString = new StringBuilder(sourceString).reverse().toString();
         return new TranslationResultImpl(translatedString, sourceLanguage, targetLanguage, contentType,
@@ -196,7 +196,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationResult[] translateArray(String[] sourceStringArr, String sourceLanguage, String targetLanguage,
         TranslationConstants.ContentType contentType, String contentCategory) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.translateArray");
+        log.trace("BootstrapTranslationServiceImpl.translateArray");
 
         TranslationResult arrResults[] = new TranslationResultImpl[sourceStringArr.length];
         for (int i = 0; i < sourceStringArr.length; i++) {
@@ -210,7 +210,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public TranslationResult[] getAllStoredTranslations(String sourceString, String sourceLanguage,
         String targetLanguage, TranslationConstants.ContentType contentType, String contentCategory, String userId,
         int maxTranslations) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getAllStoredTranslations");
+        log.trace("BootstrapTranslationServiceImpl.getAllStoredTranslations");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -220,7 +220,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public void storeTranslation(String[] originalText, String sourceLanguage, String targetLanguage,
         String[] updatedTranslation, TranslationConstants.ContentType contentType, String contentCategory,
         String userId, int rating, String path) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.storeTranslation");
+        log.trace("BootstrapTranslationServiceImpl.storeTranslation");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -230,7 +230,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public void storeTranslation(String originalText, String sourceLanguage, String targetLanguage,
         String updatedTranslation, TranslationConstants.ContentType contentType, String contentCategory,
         String userId, int rating, String path) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.storeTranslation");
+        log.trace("BootstrapTranslationServiceImpl.storeTranslation");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -240,13 +240,13 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public String createTranslationJob(String name, String description, String strSourceLanguage,
         String strTargetLanguage, Date dueDate, TranslationState state, TranslationMetadata jobMetadata)
         throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.createTranslationJob");
+        log.trace("BootstrapTranslationServiceImpl.createTranslationJob");
         // Just cleaning up the name to remove the extra spaces and square brackets
         name = name.toLowerCase().replaceAll("\\s", "-").replaceAll("\\[.*\\]_", "");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd'/"+name+"'");
         Date date = new Date();
         String translationJobName = "/var/bootstrap-tms/"+formatter.format(date);
-        log.info("Job Name: {}", translationJobName);
+        log.debug("Job Name: {}", translationJobName);
         Node jcrNode;
         try {
             jcrNode = JcrResourceUtil.createPath(translationJobName, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
@@ -263,7 +263,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     @Override
     public TranslationScope getFinalScope(String strTranslationJobID) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getFinalScope");
+        log.trace("BootstrapTranslationServiceImpl.getFinalScope");
 
         return new TranslationScopeImpl();
     }
@@ -276,11 +276,11 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     @Override
     public TranslationStatus getTranslationJobStatus(String strTranslationJobID) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getTranslationJobStatus");
+        log.trace("BootstrapTranslationServiceImpl.getTranslationJobStatus");
         
         try {
             Node jobNode = session.getNode(strTranslationJobID);
-            log.info("STATUS: {}",jobNode.getProperty("STATUS"));
+            log.debug("STATUS: {}",jobNode.getProperty("STATUS"));
         } catch (PathNotFoundException e) {
             e.printStackTrace();
         } catch (RepositoryException e) {
@@ -293,13 +293,13 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     @Override
     public CommentCollection<Comment> getTranslationJobCommentCollection(String strTranslationJobID) {
-        log.info("BootstrapTranslationServiceImpl.getTranslationJobCommentCollection");
+        log.trace("BootstrapTranslationServiceImpl.getTranslationJobCommentCollection");
         return null;
     }
 
     @Override
     public void addTranslationJobComment(String strTranslationJobID, Comment comment) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.addTranslationJobComment");
+        log.trace("BootstrapTranslationServiceImpl.addTranslationJobComment");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -308,7 +308,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public InputStream getTranslatedObject(String strTranslationJobID, TranslationObject translationObj)
         throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getTranslatedObject");
+        log.trace("BootstrapTranslationServiceImpl.getTranslatedObject");
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
     }
@@ -318,15 +318,8 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         throws TranslationException {
 
         String objectPath = strTranslationJobID+getObjectPath(translationObject);
-        log.info("ObjectPath: {}",objectPath);
-        log.info("Preview Path: {}", previewPath+getObjectPath(translationObject));
-//        try {
-//            writePreview(translationObject,previewPath);
-//        } catch (IOException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-        
+        log.debug("ObjectPath: {}",objectPath);
+        log.debug("Preview Path: {}", previewPath+getObjectPath(translationObject));
         Node jcrNode;
         try {
             jcrNode = JcrResourceUtil.createPath(objectPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
@@ -342,7 +335,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus updateTranslationObjectState(String strTranslationJobID,
         TranslationObject translationObject, TranslationState state) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.updateTranslationObjectState");
+        log.trace("BootstrapTranslationServiceImpl.updateTranslationObjectState");
         return state.getStatus();
     }
 
@@ -368,7 +361,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus[] updateTranslationObjectsState(String strTranslationJobID,
         TranslationObject[] translationObjects, TranslationState[] states) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.updateTranslationObjectsState");
+        log.trace("BootstrapTranslationServiceImpl.updateTranslationObjectsState");
 
         TranslationStatus[] retStatus = new TranslationStatus[states.length];
         for (int index = 0; index < states.length; index++) {
@@ -381,7 +374,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus[] getTranslationObjectsStatus(String strTranslationJobID,
         TranslationObject[] translationObjects) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getTranslationObjectsStatus");
+        log.trace("BootstrapTranslationServiceImpl.getTranslationObjectsStatus");
 
         TranslationStatus[] retStatus = new TranslationStatus[translationObjects.length];
         for (int index = 0; index < translationObjects.length; index++) {
@@ -393,7 +386,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public CommentCollection<Comment> getTranslationObjectCommentCollection(String strTranslationJobID,
         TranslationObject translationObject) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.getTranslationObjectCommentCollection");
+        log.trace("BootstrapTranslationServiceImpl.getTranslationObjectCommentCollection");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -402,7 +395,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public void addTranslationObjectComment(String strTranslationJobID, TranslationObject translationObject,
         Comment comment) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.addTranslationObjectComment");
+        log.trace("BootstrapTranslationServiceImpl.addTranslationObjectComment");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -411,7 +404,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public void updateTranslationJobMetadata(String strTranslationJobID, TranslationMetadata jobMetadata,
         TranslationMethod translationMethod) throws TranslationException {
-        log.info("BootstrapTranslationServiceImpl.updateTranslationJobMetadata");
+        log.trace("BootstrapTranslationServiceImpl.updateTranslationJobMetadata");
 
         throw new TranslationException("This function is not implemented",
             TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
@@ -438,7 +431,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public void updateDueDate(String strTranslationJobID, Date date)
             throws TranslationException {
-            log.info("NEW DUE DATE:{}",date);
+            log.debug("NEW DUE DATE:{}",date);
     }
     
     private static void writePreview(TranslationObject translationObject, String strOutput) throws IOException  {
@@ -447,11 +440,11 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
            
            ZipEntry entry;
            while ((entry = zis.getNextEntry()) != null) {
-               log.info("Unzipping: {}", entry.getName());
+               log.debug("Unzipping: {}", entry.getName());
 
                int size;
                byte[] buffer = new byte[2048];
-               log.info("ENTRY NAME: {}", entry.getName());
+               log.debug("ENTRY NAME: {}", entry.getName());
                FileOutputStream fos = new FileOutputStream(entry.getName());
                BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
                while ((size = zis.read(buffer, 0, buffer.length)) != -1) {

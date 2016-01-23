@@ -67,7 +67,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
     public BootstrapTranslationServiceFactoryImpl()
     {
-        log.info("BootstrapTranslationServiceFactoryImpl.");
+        log.trace("BootstrapTranslationServiceFactoryImpl.");
 
         supportedTranslationMethods = new ArrayList<TranslationMethod>();
         supportedTranslationMethods.add(TranslationMethod.HUMAN_TRANSLATION);
@@ -80,7 +80,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     public TranslationService createTranslationService(TranslationMethod translationMethod, String cloudConfigPath)
         throws TranslationException
     {
-        log.info("BootstrapTranslationServiceFactoryImpl.createTranslationService");
+        log.trace("BootstrapTranslationServiceFactoryImpl.createTranslationService");
 
         BootstrapTranslationCloudConfig bootstrapCloudConfg =
             (BootstrapTranslationCloudConfig) cloudConfigUtil.getCloudConfigObjectFromPath(
@@ -118,13 +118,13 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
     @Override
     public List<TranslationMethod> getSupportedTranslationMethods() {
-        log.info("BootstrapTranslationServiceFactoryImpl.getSupportedTranslationMethods");
+        log.trace("BootstrapTranslationServiceFactoryImpl.getSupportedTranslationMethods");
         return supportedTranslationMethods;
     }
 
     @Override
     public Class<?> getServiceCloudConfigClass() {
-        log.info("BootstrapTranslationServiceFactoryImpl.getServiceCloudConfigClass");
+        log.trace("BootstrapTranslationServiceFactoryImpl.getServiceCloudConfigClass");
         return BootstrapTranslationCloudConfig.class;
     }
 
