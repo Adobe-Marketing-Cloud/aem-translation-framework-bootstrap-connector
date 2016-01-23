@@ -46,11 +46,11 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
             this.dummyConfigId = properties.get(PROPERTY_DUMMY_CONFIG_ID, "");
             this.previewPath = properties.get(PROPERTY_PREVIEW_PATH, ""); 
 
-            if (log.isDebugEnabled()) {
-                log.debug("Created Bootstrap Cloud Config with the following:");
-                log.debug("dummyServerUrl: {}", dummyServerUrl);
-                log.debug("dummyConfigId: {}", dummyConfigId);
-                log.debug("previewPath: {}", previewPath);
+            if (log.isTraceEnabled()) {
+                log.trace("Created Bootstrap Cloud Config with the following:");
+                log.trace("dummyServerUrl: {}", dummyServerUrl);
+                log.trace("dummyConfigId: {}", dummyConfigId);
+                log.trace("previewPath: {}", previewPath);
                 
             }
         } else {

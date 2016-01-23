@@ -129,15 +129,15 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     }
 
     protected void activate(final ComponentContext ctx) {
-        log.debug("Starting function: activate");
+        log.trace("Starting function: activate");
         final Dictionary<?, ?> properties = ctx.getProperties();
 
         factoryName =
             PropertiesUtil.toString(properties.get(TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY),"");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Activated TSF with the following:");
-            log.debug("Factory Name: {}", factoryName);
+        if (log.isTraceEnabled()) {
+            log.trace("Activated TSF with the following:");
+            log.trace("Factory Name: {}", factoryName);
         }
     }
     
