@@ -14,8 +14,6 @@ written permission of Adobe.
 package com.adobe.granite.translation.connector.bootstrap.core.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +26,12 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.ValueFactory;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
@@ -67,7 +67,6 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private static final String ASSET_METADATA = "/asset-metadata";
 
     private static final String I18NCOMPONENTSTRINGDICT = "/i18n-dictionary";
-    private static final String UTF_8_ENCODING = "UTF-8";
     private static final String SERVICE_LABEL = "bootstrap";
     private static final String SERVICE_ATTRIBUTION = "Translation By Bootstrap";
     private String dummyConfigId = "";
@@ -318,12 +317,26 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         throws TranslationException {
 
         String objectPath = strTranslationJobID+getObjectPath(translationObject);
-        log.debug("ObjectPath: {}",objectPath);
-        log.debug("Preview Path: {}", previewPath+getObjectPath(translationObject));
         Node jcrNode;
         try {
+            log.debug("ObjectPath: {}",objectPath);
             jcrNode = JcrResourceUtil.createPath(objectPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
             JcrResourceUtil.setProperty(jcrNode, "STATUS", TranslationStatus.TRANSLATION_IN_PROGRESS.toString());
+            
+            InputStream inputStream = null;
+            if(translationObject.getMimeType().startsWith("text")){
+            	inputStream = translationObject.getTranslationObjectXMLInputStream();
+            }else {
+            	// For Binary assets, use the XLIFFInputStream v 2.0
+            	inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");
+            }
+            
+            if(inputStream!=null) {
+            	ValueFactory valueFactory = session.getValueFactory();               
+                Binary contentValue = valueFactory.createBinary(inputStream);
+                Node contentNode = jcrNode.addNode(JcrConstants.JCR_CONTENT, JcrConstants.NT_RESOURCE);
+                contentNode.setProperty(JcrConstants.JCR_DATA, contentValue);
+            }
             session.save();
         } catch (RepositoryException e) {
             log.error("Repository Exception",e);
