@@ -13,7 +13,8 @@ written permission of Adobe.
 
 package com.adobe.granite.translation.connector.bootstrap.core.impl;
 
-import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,9 +132,9 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
 
         log.trace("BootstrapTranslationServiceImpl.");
-        log.trace("dummyConfigId: " + dummyConfigId);
-        log.trace("dummyServerUrl: " + dummyServerUrl);
-        log.trace("previewPath: " + previewPath);
+        log.trace("dummyConfigId: {}",dummyConfigId);
+        log.trace("dummyServerUrl: {}",dummyServerUrl);
+        log.trace("previewPath: {}",previewPath);
 
 
         try {
@@ -338,6 +339,19 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
                 contentNode.setProperty(JcrConstants.JCR_DATA, contentValue);
             }
             session.save();
+            // Generate Preview
+            log.trace("Preview Directory is: {}",previewPath);
+//            try {
+//				ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
+//				if(zipInputStream !=null) {
+//					unzipFileFromStream(zipInputStream, previewPath);	
+//				}
+//			} catch (FileNotFoundException e) {
+//				log.error(e.getLocalizedMessage(),e);
+//			} catch (IOException e) {
+//				log.error(e.getLocalizedMessage(),e);
+//			}
+            
         } catch (RepositoryException e) {
             log.error("Repository Exception",e);
         }
@@ -441,32 +455,61 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         return null;
     }    
 
-    @Override
     public void updateDueDate(String strTranslationJobID, Date date)
             throws TranslationException {
             log.debug("NEW DUE DATE:{}",date);
+            Node jcrNode;
+			try {
+				jcrNode = JcrResourceUtil.createPath(strTranslationJobID, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
+	            if(date !=null) {
+	                JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", date.toString());    
+	            }
+	            session.save();				
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     }
     
-    private static void writePreview(TranslationObject translationObject, String strOutput) throws IOException  {
+	private static void unzipFileFromStream(ZipInputStream zipInputStream, String targetPath) throws IOException {
+		File dirFile = new File(targetPath + File.separator);
+		if (!dirFile.exists()) {
+			dirFile.mkdirs();
+			log.trace("Created directory: {}",dirFile);
+		}
 
-           ZipInputStream zis = translationObject.getTranslationObjectPreview();
-           
-           ZipEntry entry;
-           while ((entry = zis.getNextEntry()) != null) {
-               log.debug("Unzipping: {}", entry.getName());
+		ZipEntry zipEntry = null;
+		while (null != (zipEntry = zipInputStream.getNextEntry())) {
+			String zipFileName = zipEntry.getName();
+			if (zipEntry.isDirectory()) {
+				File zipFolder = new File(targetPath + File.separator + zipFileName);
+				if (!zipFolder.exists()) {
+					zipFolder.mkdirs();
+					log.trace("Created directory: {}",zipFolder);
+				}
+			} else {
+				File file = new File(targetPath + File.separator + zipFileName);
 
-               int size;
-               byte[] buffer = new byte[2048];
-               log.debug("ENTRY NAME: {}", entry.getName());
-               FileOutputStream fos = new FileOutputStream(entry.getName());
-               BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
-               while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
-                 bos.write(buffer, 0, size);
-               }
-               bos.flush();
-               bos.close();
-             }
-           zis.close();
-    }
+				File parent = file.getParentFile();
+				if (!parent.exists()) {
+					parent.mkdirs();
+				}
+
+				FileOutputStream fos = null;
+				try {
+					fos = new FileOutputStream(file);
+				} catch (FileNotFoundException e) {
+					log.error(e.getLocalizedMessage(),e);
+				}
+				int readLen = 0;
+				byte buffer[] = new byte[1024];
+				while (-1 != (readLen = zipInputStream.read(buffer))) {
+					fos.write(buffer, 0, readLen);
+				}
+				fos.close();
+			}
+		}
+		zipInputStream.close();
+	}
     
 }
