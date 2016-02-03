@@ -122,11 +122,12 @@
             <artifactId>uber-jar</artifactId>
             <classifier>obfuscated-apis</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.adobe.granite.translation</groupId>
+            <artifactId>bootstrap-tms.core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../content/src/main/content/jcr_root/apps/bootstrap-connector/install/bootstrap-tms.core-1.0.0-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>project-repo</id>
-            <url>file://${project.basedir}/../project-repo</url>
-        </repository>
-    </repositories>
 </project>

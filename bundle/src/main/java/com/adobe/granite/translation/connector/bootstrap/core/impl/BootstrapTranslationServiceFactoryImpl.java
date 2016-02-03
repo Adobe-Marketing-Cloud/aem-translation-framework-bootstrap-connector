@@ -37,6 +37,7 @@ import com.adobe.granite.translation.api.TranslationConstants.TranslationMethod;
 import com.adobe.granite.translation.api.TranslationException;
 import com.adobe.granite.translation.api.TranslationService;
 import com.adobe.granite.translation.api.TranslationServiceFactory;
+import com.adobe.granite.translation.bootstrap.tms.core.PseudoTranslator;
 import com.adobe.granite.translation.connector.bootstrap.core.BootstrapTranslationCloudConfig;
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 
@@ -62,6 +63,9 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     
     @Reference
     ResourceResolverFactory resourceResolverFactory;
+
+    @Reference
+    PseudoTranslator pseudoTranslator;
 
     private List<TranslationMethod> supportedTranslationMethods;
 
@@ -113,7 +117,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
         return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, dummyConfigId, dummyServerUrl, previewPath,
-             translationConfig, resourceResolverFactory);
+             translationConfig, pseudoTranslator, resourceResolverFactory);
     }
 
     @Override
