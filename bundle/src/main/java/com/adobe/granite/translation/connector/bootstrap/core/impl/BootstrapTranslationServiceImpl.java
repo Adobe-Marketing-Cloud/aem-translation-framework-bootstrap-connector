@@ -345,16 +345,18 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
             session.save();
             // Generate Preview
             log.trace("Preview Directory is: {}",previewPath);
-//            try {
-//				ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
-//				if(zipInputStream !=null) {
-//					unzipFileFromStream(zipInputStream, previewPath);	
-//				}
-//			} catch (FileNotFoundException e) {
-//				log.error(e.getLocalizedMessage(),e);
-//			} catch (IOException e) {
-//				log.error(e.getLocalizedMessage(),e);
-//			}
+            try {
+				ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
+				if(zipInputStream !=null) {
+					unzipFileFromStream(zipInputStream, previewPath);	
+				} else {
+					log.error("Got null for zipInputStream for "+getObjectPath(translationObject));
+				}
+			} catch (FileNotFoundException e) {
+				log.error(e.getLocalizedMessage(),e);
+			} catch (IOException e) {
+				log.error(e.getLocalizedMessage(),e);
+			}
             
         } catch (RepositoryException e) {
             log.error("Repository Exception",e);
