@@ -55,7 +55,7 @@ import com.adobe.granite.translation.api.TranslationResult;
 import com.adobe.granite.translation.api.TranslationScope;
 import com.adobe.granite.translation.api.TranslationService;
 import com.adobe.granite.translation.api.TranslationState;
-import com.adobe.granite.translation.bootstrap.tms.core.PseudoTranslator;
+import com.adobe.granite.translation.bootstrap.tms.core.BootstrapTmsService;
 import com.adobe.granite.translation.connector.bootstrap.core.impl.config.BootstrapTranslationCloudConfigImpl;
 import com.adobe.granite.translation.core.common.AbstractTranslationService;
 import com.adobe.granite.translation.core.common.TranslationResultImpl;
@@ -74,7 +74,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private String dummyConfigId = "";
     private String dummyServerUrl = "";
     private String previewPath = "";
-    private PseudoTranslator pseudoTranslator;
+    private BootstrapTmsService bootstrapTmsService;
     private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
     Session session = null;
 
@@ -129,7 +129,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
         Map<String, String> availableCategoryMap, String name, String dummyConfigId, String dummyServerUrl, String previewPath,
-        TranslationConfig translationConfig, PseudoTranslator pseudoTranslator, ResourceResolverFactory resourceResolverFactory) {
+        TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService, ResourceResolverFactory resourceResolverFactory) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
 
@@ -151,7 +151,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
         this.previewPath = previewPath;
-        this.pseudoTranslator = pseudoTranslator;
+        this.bootstrapTmsService = bootstrapTmsService;
     }
 
     @Override
@@ -192,7 +192,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         log.trace("BootstrapTranslationServiceImpl.translateString");
 
 //        String translatedString = new StringBuilder(sourceString).reverse().toString();
-        String translatedString = pseudoTranslator.getAccentedText(sourceString);
+        String translatedString = bootstrapTmsService.getAccentedText(sourceString);
         return new TranslationResultImpl(translatedString, sourceLanguage, targetLanguage, contentType,
             contentCategory, sourceString, TranslationResultImpl.UNKNOWN_RATING, null);
     }
