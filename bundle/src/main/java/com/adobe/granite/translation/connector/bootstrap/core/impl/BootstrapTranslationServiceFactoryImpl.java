@@ -24,7 +24,6 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
@@ -61,9 +60,6 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     @Reference
     CryptoSupport cryptoSupport;
     
-    @Reference
-    ResourceResolverFactory resourceResolverFactory;
-
     @Reference
     BootstrapTmsService bootstrapTmsService;
 
@@ -117,7 +113,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
         return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, dummyConfigId, dummyServerUrl, previewPath,
-             translationConfig, bootstrapTmsService, resourceResolverFactory);
+             translationConfig, bootstrapTmsService);
     }
 
     @Override

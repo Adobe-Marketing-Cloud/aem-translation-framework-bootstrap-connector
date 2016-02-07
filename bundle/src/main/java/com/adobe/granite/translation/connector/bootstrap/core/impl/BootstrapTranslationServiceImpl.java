@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,18 +26,6 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.jcr.Binary;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.ValueFactory;
-
-import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +63,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private String previewPath = "";
     private BootstrapTmsService bootstrapTmsService;
     private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
-    Session session = null;
+
 
     class TranslationJobDetails {
         String strName;
@@ -117,9 +104,9 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
             Map<String, String> newScope = new LinkedHashMap<String, String>();
             newScope.put("ICE Words", "0");
             newScope.put("100% Words", "0");
-            newScope.put("New Words", "85");
+            newScope.put("New Words", Integer.toString(getWordCount()));
             newScope.put("Repeated Words", "0");
-            newScope.put("TranslationScope:CostEstimate", "USD 150.00");
+            newScope.put("TranslationScope:CostEstimate", "USD 73.00");
             newScope.put("TranslationScope:DetailsLink","https://github.com/Adobe-Marketing-Cloud/aem-translation-framework-bootstrap-connector");
 
             return newScope;
@@ -129,7 +116,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
         Map<String, String> availableCategoryMap, String name, String dummyConfigId, String dummyServerUrl, String previewPath,
-        TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService, ResourceResolverFactory resourceResolverFactory) {
+        TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
 
@@ -137,17 +124,6 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         log.trace("dummyConfigId: {}",dummyConfigId);
         log.trace("dummyServerUrl: {}",dummyServerUrl);
         log.trace("previewPath: {}",previewPath);
-
-
-        try {
-            ResourceResolver resolver = resourceResolverFactory.getServiceResourceResolver(
-                    Collections.singletonMap(ResourceResolverFactory.SUBSERVICE,
-                            (Object) BOOTSTRAP_SERVICE));
-            session = resolver.adaptTo(Session.class);
-        } catch (LoginException e) {
-            log.error("Login Exception",e);
-        }
-           
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
         this.previewPath = previewPath;
@@ -173,7 +149,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public boolean isDirectionSupported(String sourceLanguage, String targetLanguage) throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.isDirectionSupported");
         // It should return true, if translation provider provides translation from sourceLanguage to targetLanguage
-// otherwise false
+        // otherwise false
         return true;
     }
 
@@ -190,8 +166,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public TranslationResult translateString(String sourceString, String sourceLanguage, String targetLanguage,
         TranslationConstants.ContentType contentType, String contentCategory) throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.translateString");
-
-//        String translatedString = new StringBuilder(sourceString).reverse().toString();
+        // Using Pseudo translation here using accented characters
         String translatedString = bootstrapTmsService.getAccentedText(sourceString);
         return new TranslationResultImpl(translatedString, sourceLanguage, targetLanguage, contentType,
             contentCategory, sourceString, TranslationResultImpl.UNKNOWN_RATING, null);
@@ -245,24 +220,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         String strTargetLanguage, Date dueDate, TranslationState state, TranslationMetadata jobMetadata)
         throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.createTranslationJob");
-        // Just cleaning up the name to remove the extra spaces and square brackets
-        name = name.toLowerCase().replaceAll("\\s", "-").replaceAll("\\[.*\\]_", "");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd'/"+name+"'");
-        Date date = new Date();
-        String translationJobName = "/var/bootstrap-tms/"+formatter.format(date);
-        log.debug("Job Name: {}", translationJobName);
-        Node jcrNode;
-        try {
-            jcrNode = JcrResourceUtil.createPath(translationJobName, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
-            if(dueDate !=null) {
-                JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", dueDate.toString());    
-            }
-            session.save();
-        } catch (RepositoryException e) {
-            log.error("Repository Exception",e);
-        }
-        return translationJobName;
-        
+        return bootstrapTmsService.createBootstrapTmsJob(name, strSourceLanguage, strTargetLanguage, dueDate);
     }
 
     @Override
@@ -281,18 +239,9 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus getTranslationJobStatus(String strTranslationJobID) throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.getTranslationJobStatus");
-        
-        try {
-            Node jobNode = session.getNode(strTranslationJobID);
-            log.debug("STATUS: {}",jobNode.getProperty("STATUS"));
-        } catch (PathNotFoundException e) {
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-        
-        return TranslationStatus.SCOPE_COMPLETED;        
-        
+        String status = bootstrapTmsService.getTmsJobStatus(strTranslationJobID);
+        log.debug("Status for Job {} is {}", strTranslationJobID, status);
+        return TranslationStatus.fromString(status);
     }
 
     @Override
@@ -313,56 +262,39 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public InputStream getTranslatedObject(String strTranslationJobID, TranslationObject translationObj)
         throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.getTranslatedObject");
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
+        return bootstrapTmsService.getTmsObjecTranslatedInputStream(strTranslationJobID, getObjectPath(translationObj));
     }
 
     @Override
     public String uploadTranslationObject(String strTranslationJobID, TranslationObject translationObject)
         throws TranslationException {
 
-        String objectPath = strTranslationJobID+getObjectPath(translationObject);
-        Node jcrNode;
-        try {
-            log.debug("ObjectPath: {}",objectPath);
-            jcrNode = JcrResourceUtil.createPath(objectPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
-            JcrResourceUtil.setProperty(jcrNode, "STATUS", TranslationStatus.TRANSLATION_IN_PROGRESS.toString());
-            
-            InputStream inputStream = null;
-            if(translationObject.getMimeType().startsWith("text")){
-            	inputStream = translationObject.getTranslationObjectXMLInputStream();
-            }else {
-            	// For Binary assets, use the XLIFFInputStream v 2.0
-            	inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");
-            }
-            
-            if(inputStream!=null) {
-            	ValueFactory valueFactory = session.getValueFactory();               
-                Binary contentValue = valueFactory.createBinary(inputStream);
-                Node contentNode = jcrNode.addNode(JcrConstants.JCR_CONTENT, JcrConstants.NT_RESOURCE);
-                contentNode.setProperty(JcrConstants.JCR_DATA, contentValue);
-            }
-            session.save();
-            // Generate Preview
-            log.trace("Preview Directory is: {}",previewPath);
-            try {
-				ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
-				if(zipInputStream !=null) {
-					unzipFileFromStream(zipInputStream, previewPath);	
-				} else {
-					log.error("Got null for zipInputStream for "+getObjectPath(translationObject));
-				}
-			} catch (FileNotFoundException e) {
-				log.error(e.getLocalizedMessage(),e);
-			} catch (IOException e) {
-				log.error(e.getLocalizedMessage(),e);
+		InputStream inputStream;
+		
+		if(translationObject.getMimeType().startsWith("text")) {
+			inputStream = translationObject.getTranslationObjectXMLInputStream();
+		} else {
+			inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");	
+		}
+
+		String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream);
+
+		// Generate Preview
+		log.trace("Preview Directory is: {}", previewPath);
+		try {
+			ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
+			if (zipInputStream != null) {
+				unzipFileFromStream(zipInputStream, previewPath);
+			} else {
+				log.error("Got null for zipInputStream for " + getObjectPath(translationObject));
 			}
-            
-        } catch (RepositoryException e) {
-            log.error("Repository Exception",e);
-        }
-        
-        return objectPath; 
+		} catch (FileNotFoundException e) {
+			log.error(e.getLocalizedMessage(), e);
+		} catch (IOException e) {
+			log.error(e.getLocalizedMessage(), e);
+		}
+
+		return objectPath;
     }
 
     @Override
@@ -375,20 +307,8 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus getTranslationObjectStatus(String strTranslationJobID,
         TranslationObject translationObject) throws TranslationException {
-
-        String objectPath = strTranslationJobID+getObjectPath(translationObject);
-        String status = "";
-        try {
-            status = session.getNode(objectPath).getProperty("STATUS").getString();
-        } catch (PathNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
-            return TranslationConstants.TranslationStatus.fromString(status);
+        String status = bootstrapTmsService.getTmsObjectStatus(strTranslationJobID, getObjectPath(translationObject));
+        return TranslationConstants.TranslationStatus.fromString(status);
     }
 
     @Override
@@ -464,17 +384,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public void updateDueDate(String strTranslationJobID, Date date)
             throws TranslationException {
             log.debug("NEW DUE DATE:{}",date);
-            Node jcrNode;
-			try {
-				jcrNode = JcrResourceUtil.createPath(strTranslationJobID, "sling:Folder", JcrConstants.NT_UNSTRUCTURED, session, false);
-	            if(date !=null) {
-	                JcrResourceUtil.setProperty(jcrNode, "DUE_DATE", date.toString());    
-	            }
-	            session.save();				
-			} catch (RepositoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            bootstrapTmsService.setTmsJobDuedate(strTranslationJobID, date);
     }
     
 	private static void unzipFileFromStream(ZipInputStream zipInputStream, String targetPath) throws IOException {
