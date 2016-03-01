@@ -262,7 +262,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public InputStream getTranslatedObject(String strTranslationJobID, TranslationObject translationObj)
         throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.getTranslatedObject");
-        return bootstrapTmsService.getTmsObjecTranslatedInputStream(strTranslationJobID, getObjectPath(translationObj));
+        return bootstrapTmsService.getTmsObjectTranslatedInputStream(strTranslationJobID, getObjectPath(translationObj));
     }
 
     @Override
