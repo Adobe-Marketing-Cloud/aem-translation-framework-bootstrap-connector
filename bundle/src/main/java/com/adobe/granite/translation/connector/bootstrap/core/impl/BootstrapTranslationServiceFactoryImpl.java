@@ -44,12 +44,16 @@ import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 @Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true)
 @Properties(value = {
     @Property(name = "service.description", value = "Bootstrap translation service"),
+    @Property(name="preview.enabled", label="Enable Preview", boolValue=false, description="Preview Enabled for Translation Objects"),
     @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "Bootstrap Connector",
             label = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this "
                     + "Translation Factory Connector")})
+	
 public class BootstrapTranslationServiceFactoryImpl implements TranslationServiceFactory {
 
     protected String factoryName;
+    
+    protected Boolean isPreviewEnabled;
 
     @Reference
     TranslationCloudConfigUtil cloudConfigUtil;
@@ -112,7 +116,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
-        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, dummyConfigId, dummyServerUrl, previewPath,
+        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, dummyConfigId, dummyServerUrl, previewPath,
              translationConfig, bootstrapTmsService);
     }
 
@@ -135,9 +139,11 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
         factoryName =
             PropertiesUtil.toString(properties.get(TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY),"");
 
+        isPreviewEnabled = PropertiesUtil.toBoolean(properties.get("preview.enabled"), false);
         if (log.isTraceEnabled()) {
             log.trace("Activated TSF with the following:");
             log.trace("Factory Name: {}", factoryName);
+            log.trace("Preview Enabled: {}",isPreviewEnabled);            
         }
     }
     

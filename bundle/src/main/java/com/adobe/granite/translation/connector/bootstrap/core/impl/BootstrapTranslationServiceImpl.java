@@ -61,6 +61,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private String dummyConfigId = "";
     private String dummyServerUrl = "";
     private String previewPath = "";
+    private Boolean isPreviewEnabled = false;
     private BootstrapTmsService bootstrapTmsService;
     private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
 
@@ -115,7 +116,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
-        Map<String, String> availableCategoryMap, String name, String dummyConfigId, String dummyServerUrl, String previewPath,
+        Map<String, String> availableCategoryMap, String name, Boolean isPreviewEnabled, String dummyConfigId, String dummyServerUrl, String previewPath,
         TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
@@ -124,10 +125,12 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         log.trace("dummyConfigId: {}",dummyConfigId);
         log.trace("dummyServerUrl: {}",dummyServerUrl);
         log.trace("previewPath: {}",previewPath);
+        log.trace("isPreviewEnabled: {}",isPreviewEnabled);
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
         this.previewPath = previewPath;
         this.bootstrapTmsService = bootstrapTmsService;
+        this.isPreviewEnabled = isPreviewEnabled;
     }
 
     @Override
@@ -280,19 +283,21 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 		String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream);
 
 		// Generate Preview
-		log.trace("Preview Directory is: {}", previewPath);
-		try {
-			ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
-			if (zipInputStream != null) {
-				unzipFileFromStream(zipInputStream, previewPath);
-			} else {
-				log.error("Got null for zipInputStream for " + getObjectPath(translationObject));
-			}
-		} catch (FileNotFoundException e) {
-			log.error(e.getLocalizedMessage(), e);
-		} catch (IOException e) {
-			log.error(e.getLocalizedMessage(), e);
+		if(isPreviewEnabled) {
+			try {
+				ZipInputStream zipInputStream = translationObject.getTranslationObjectPreview();
+				if (zipInputStream != null) {
+					unzipFileFromStream(zipInputStream, previewPath);
+				} else {
+					log.error("Got null for zipInputStream for " + getObjectPath(translationObject));
+				}
+			} catch (FileNotFoundException e) {
+				log.error(e.getLocalizedMessage(), e);
+			} catch (IOException e) {
+				log.error(e.getLocalizedMessage(), e);
+			}			
 		}
+		log.trace("Preview Directory is: {}", previewPath);
 
 		return objectPath;
     }
