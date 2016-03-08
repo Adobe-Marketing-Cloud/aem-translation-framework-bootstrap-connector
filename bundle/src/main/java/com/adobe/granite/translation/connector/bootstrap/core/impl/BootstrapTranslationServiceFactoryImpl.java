@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.PropertyOption;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.commons.osgi.PropertiesUtil;
@@ -44,16 +45,24 @@ import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 @Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true)
 @Properties(value = {
     @Property(name = "service.description", value = "Bootstrap translation service"),
-    @Property(name="preview.enabled", label="Enable Preview", boolValue=false, description="Preview Enabled for Translation Objects"),
+    @Property(name=BootstrapConstants.PREVIEW_ENABLED, label="Enable Preview", boolValue=false, description="Preview Enabled for Translation Objects"),
     @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "Bootstrap Connector",
             label = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this "
-                    + "Translation Factory Connector")})
+                    + "Translation Factory Connector"),
+    @Property(name=BootstrapConstants.EXPORT_FORMAT_FIELD, label="Export Format",value="xml",description="Please specify the format for exporting translation jobs",options={
+    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XML, value = "XML"),
+    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XLIFF_1_2, value = "XLIFF 1.2"),
+    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0, value = "XLIFF 2.0")
+    })
+})
 	
 public class BootstrapTranslationServiceFactoryImpl implements TranslationServiceFactory {
 
     protected String factoryName;
     
     protected Boolean isPreviewEnabled;
+    
+    protected String exportFormat;
 
     @Reference
     TranslationCloudConfigUtil cloudConfigUtil;
@@ -116,7 +125,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
-        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, dummyConfigId, dummyServerUrl, previewPath,
+        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, exportFormat, dummyConfigId, dummyServerUrl, previewPath,
              translationConfig, bootstrapTmsService);
     }
 
@@ -139,11 +148,14 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
         factoryName =
             PropertiesUtil.toString(properties.get(TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY),"");
 
-        isPreviewEnabled = PropertiesUtil.toBoolean(properties.get("preview.enabled"), false);
+        isPreviewEnabled = PropertiesUtil.toBoolean(properties.get(BootstrapConstants.PREVIEW_ENABLED), false);
+        
+        exportFormat = PropertiesUtil.toString(properties.get(BootstrapConstants.EXPORT_FORMAT_FIELD), BootstrapConstants.EXPORT_FORMAT_XML);
         if (log.isTraceEnabled()) {
             log.trace("Activated TSF with the following:");
             log.trace("Factory Name: {}", factoryName);
-            log.trace("Preview Enabled: {}",isPreviewEnabled);            
+            log.trace("Preview Enabled: {}",isPreviewEnabled);
+            log.trace("Export Format: {}", exportFormat);
         }
     }
     

@@ -62,6 +62,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private String dummyServerUrl = "";
     private String previewPath = "";
     private Boolean isPreviewEnabled = false;
+    private String exportFormat = BootstrapConstants.EXPORT_FORMAT_XML;
     private BootstrapTmsService bootstrapTmsService;
     private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
 
@@ -116,7 +117,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
-        Map<String, String> availableCategoryMap, String name, Boolean isPreviewEnabled, String dummyConfigId, String dummyServerUrl, String previewPath,
+        Map<String, String> availableCategoryMap, String name, Boolean isPreviewEnabled, String exportFormat, String dummyConfigId, String dummyServerUrl, String previewPath,
         TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
@@ -126,11 +127,13 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         log.trace("dummyServerUrl: {}",dummyServerUrl);
         log.trace("previewPath: {}",previewPath);
         log.trace("isPreviewEnabled: {}",isPreviewEnabled);
+        log.trace("exportFormat: {}",exportFormat);
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
         this.previewPath = previewPath;
         this.bootstrapTmsService = bootstrapTmsService;
         this.isPreviewEnabled = isPreviewEnabled;
+        this.exportFormat=exportFormat;
     }
 
     @Override
@@ -272,15 +275,17 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public String uploadTranslationObject(String strTranslationJobID, TranslationObject translationObject)
         throws TranslationException {
 
-		InputStream inputStream;
-		
-		if(translationObject.getMimeType().startsWith("text")) {
-			inputStream = translationObject.getTranslationObjectXMLInputStream();
-		} else {
-			inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");	
-		}
-
-		String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream);
+        InputStream inputStream;
+        log.trace("Using {} InputStream", exportFormat);
+        if (exportFormat.equalsIgnoreCase(BootstrapConstants.EXPORT_FORMAT_XLIFF_1_2)) {
+        	inputStream = translationObject.getTranslationObjectXLIFFInputStream("1.2");
+        } else if (exportFormat.equalsIgnoreCase(BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0)) {
+        	inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");
+        } else {
+        	inputStream = translationObject.getTranslationObjectXMLInputStream();
+        }
+  	
+		String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream, exportFormat);
 
 		// Generate Preview
 		if(isPreviewEnabled) {
