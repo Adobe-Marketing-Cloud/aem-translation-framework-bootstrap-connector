@@ -239,6 +239,9 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus updateTranslationJobState(String strTranslationJobID, TranslationState state)
         throws TranslationException {
+    	if(state.getStatus() == TranslationStatus.COMMITTED_FOR_TRANSLATION) {
+    		log.trace("Uploaded all Translation Objects in job {}",strTranslationJobID);
+    	}
         return state.getStatus();
     }
 
