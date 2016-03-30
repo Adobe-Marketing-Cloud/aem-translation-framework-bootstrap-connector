@@ -42,6 +42,7 @@ import com.adobe.granite.translation.api.TranslationResult;
 import com.adobe.granite.translation.api.TranslationScope;
 import com.adobe.granite.translation.api.TranslationService;
 import com.adobe.granite.translation.api.TranslationState;
+import com.adobe.granite.translation.bootstrap.tms.core.BootstrapTmsConstants;
 import com.adobe.granite.translation.bootstrap.tms.core.BootstrapTmsService;
 import com.adobe.granite.translation.connector.bootstrap.core.impl.config.BootstrapTranslationCloudConfigImpl;
 import com.adobe.granite.translation.core.common.AbstractTranslationService;
@@ -242,6 +243,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     	if(state.getStatus() == TranslationStatus.COMMITTED_FOR_TRANSLATION) {
     		log.trace("Uploaded all Translation Objects in job {}",strTranslationJobID);
     	}
+    	bootstrapTmsService.setTmsProperty(strTranslationJobID, BootstrapTmsConstants.BOOTSTRAP_TMS_STATUS, state.getStatus().toString());
         return state.getStatus();
     }
 
