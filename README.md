@@ -36,4 +36,6 @@ Or to deploy only the bundle to the author, run
 
 For detailed information visit:
 
-    https://helpx.adobe.com/experience-manager/using/bootstrap.html
+    - [Overview of Translation Framework](https://docs.adobe.com/docs/en/aem/6-1/administer/sites/translation/tc-tic.html)
+    - [Bootstrap connector Installation steps](https://helpx.adobe.com/experience-manager/using/bootstrap.html)
+    - [State diagram](https://files.acrobat.com/a/preview/32824bd9-6cc6-41b4-bc7b-8e7c4d2c7d65) showing different states of translation as noted in the API
