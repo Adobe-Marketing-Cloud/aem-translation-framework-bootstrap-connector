@@ -289,8 +289,8 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         } else {
         	inputStream = translationObject.getTranslationObjectXMLInputStream();
         }
-  	
-		String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream, exportFormat);
+
+	String objectPath = bootstrapTmsService.uploadBootstrapTmsObject(strTranslationJobID, getObjectPath(translationObject), inputStream, translationObject.getMimeType(), exportFormat);
 
 		// Generate Preview
 		if(isPreviewEnabled) {
