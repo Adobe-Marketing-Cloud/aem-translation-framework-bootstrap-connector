@@ -240,10 +240,15 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     @Override
     public TranslationStatus updateTranslationJobState(String strTranslationJobID, TranslationState state)
         throws TranslationException {
+    	if(strTranslationJobID=="dummy"){
+    		log.debug("Dummy Translation job detected");
+    	} else {
+    		bootstrapTmsService.setTmsProperty(strTranslationJobID, BootstrapTmsConstants.BOOTSTRAP_TMS_STATUS, state.getStatus().toString());
+    		log.warn("JOB ID is {}",strTranslationJobID);
+    	}
     	if(state.getStatus() == TranslationStatus.COMMITTED_FOR_TRANSLATION) {
     		log.trace("Uploaded all Translation Objects in job {}",strTranslationJobID);
     	}
-    	bootstrapTmsService.setTmsProperty(strTranslationJobID, BootstrapTmsConstants.BOOTSTRAP_TMS_STATUS, state.getStatus().toString());
         return state.getStatus();
     }
 
