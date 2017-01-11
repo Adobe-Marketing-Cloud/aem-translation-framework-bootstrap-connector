@@ -1,8 +1,8 @@
 # AEM Translation Framework Bootstrap Connector
 
-Use `aem610 branch` for the connector version that is supported with AEM 610.
+Use `master branch` for the connector version that is supported with AEM 620.
 
-The Bootstrap connector is built using the Translation Framework API for AEM 6.2.0. The purpose of the connector is to
+The Bootstrap connector is built using the Translation Framework API for AEM 6.3.0. The purpose of the connector is to
 
 * Provide sample code to Translation partners and Service providers to start building their connector
 * Provide best practices for building/packaging the connector
