@@ -335,7 +335,7 @@
     <repositories>
         <repository>
             <id>localinstance</id>
-            <name>AEM 5.6.1 localinstance</name>
+            <name>AEM localinstance</name>
             <url>http://localhost:4502/maven/repository</url>
             <releases>
                 <enabled>true</enabled>
@@ -348,7 +348,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>localinstance</id>
-            <name>AEM 5.6.1 localinstance</name>
+            <name>AEM localinstance</name>
             <url>http://localhost:4502/maven/repository</url>
             <releases>
                 <enabled>true</enabled>
@@ -455,7 +455,7 @@
             <dependency>
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
-                <version>6.1.0</version>
+                <version>6.2.0</version>
                 <classifier>obfuscated-apis</classifier>
                 <scope>provided</scope>
             </dependency>
