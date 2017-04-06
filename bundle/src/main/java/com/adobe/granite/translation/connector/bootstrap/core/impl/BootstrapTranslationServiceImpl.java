@@ -63,6 +63,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     private String dummyServerUrl = "";
     private String previewPath = "";
     private Boolean isPreviewEnabled = false;
+    private Boolean isPseudoLocalizationDisabled = false;
     private String exportFormat = BootstrapConstants.EXPORT_FORMAT_XML;
     private BootstrapTmsService bootstrapTmsService;
     private final static String BOOTSTRAP_SERVICE = "bootstrap-service";
@@ -118,7 +119,7 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
 
     // Constructor
     public BootstrapTranslationServiceImpl(Map<String, String> availableLanguageMap,
-        Map<String, String> availableCategoryMap, String name, Boolean isPreviewEnabled, String exportFormat, String dummyConfigId, String dummyServerUrl, String previewPath,
+        Map<String, String> availableCategoryMap, String name, Boolean isPreviewEnabled, Boolean isPseudoLocalizationDisabled, String exportFormat, String dummyConfigId, String dummyServerUrl, String previewPath,
         TranslationConfig translationConfig, BootstrapTmsService bootstrapTmsService) {
         super(availableLanguageMap, availableCategoryMap, name, SERVICE_LABEL, SERVICE_ATTRIBUTION,
             BootstrapTranslationCloudConfigImpl.ROOT_PATH, TranslationMethod.MACHINE_TRANSLATION, translationConfig);
@@ -128,11 +129,13 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         log.trace("dummyServerUrl: {}",dummyServerUrl);
         log.trace("previewPath: {}",previewPath);
         log.trace("isPreviewEnabled: {}",isPreviewEnabled);
+        log.trace("isPseudoLocalizationDisabled: {}", isPseudoLocalizationDisabled);
         log.trace("exportFormat: {}",exportFormat);
         this.dummyConfigId = dummyConfigId;
         this.dummyServerUrl = dummyServerUrl;
         this.previewPath = previewPath;
         this.bootstrapTmsService = bootstrapTmsService;
+        this.isPseudoLocalizationDisabled = isPseudoLocalizationDisabled;
         this.isPreviewEnabled = isPreviewEnabled;
         this.exportFormat=exportFormat;
     }
@@ -173,8 +176,13 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public TranslationResult translateString(String sourceString, String sourceLanguage, String targetLanguage,
         TranslationConstants.ContentType contentType, String contentCategory) throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.translateString");
-        // Using Pseudo translation here using accented characters
-        String translatedString = bootstrapTmsService.getAccentedText(sourceString);
+        String translatedString = "";
+        if(isPseudoLocalizationDisabled == true){
+        	translatedString = String.format("%s_%s_%s", sourceLanguage, sourceString, targetLanguage);
+        }else {
+        	// Using Pseudo translation here using accented characters
+        	translatedString = bootstrapTmsService.getAccentedText(sourceString);	
+        }
         return new TranslationResultImpl(translatedString, sourceLanguage, targetLanguage, contentType,
             contentCategory, sourceString, TranslationResultImpl.UNKNOWN_RATING, null);
     }
