@@ -20,4 +20,7 @@ public class BootstrapConstants {
 	
 	/** The Constant PREVIEW_ENABLED. */
 	public static final String PREVIEW_ENABLED = "preview.enabled";
+	
+	/** The Constant PSEUDO_L10N_ENABLED. */
+	public static final String PSEUDO_L10N_DISABLED = "pseudo.localization.disabled";
 }

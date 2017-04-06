@@ -42,10 +42,11 @@ import com.adobe.granite.translation.connector.bootstrap.core.BootstrapTranslati
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 
 @Service
-@Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true)
+@Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true, description="Configurable settings for the Bootstrap Translation connector")
 @Properties(value = {
     @Property(name = "service.description", value = "Bootstrap translation service"),
     @Property(name=BootstrapConstants.PREVIEW_ENABLED, label="Enable Preview", boolValue=false, description="Preview Enabled for Translation Objects"),
+    @Property(name=BootstrapConstants.PSEUDO_L10N_DISABLED, label="Disable Psuedo L10n", boolValue=false, description="Disable Pseudo localization for Machine translations and use a simple Language prefix instead"),
     @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "Bootstrap Connector",
             label = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this "
                     + "Translation Factory Connector"),
@@ -61,6 +62,8 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
     protected String factoryName;
     
     protected Boolean isPreviewEnabled;
+    
+    protected Boolean isPseudoLocalizationDisabled;
     
     protected String exportFormat;
 
@@ -125,7 +128,7 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         Map<String, String> availableLanguageMap = new HashMap<String, String>();
         Map<String, String> availableCategoryMap = new HashMap<String, String>();
-        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, exportFormat, dummyConfigId, dummyServerUrl, previewPath,
+        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, isPseudoLocalizationDisabled, exportFormat, dummyConfigId, dummyServerUrl, previewPath,
              translationConfig, bootstrapTmsService);
     }
 
@@ -150,11 +153,14 @@ public class BootstrapTranslationServiceFactoryImpl implements TranslationServic
 
         isPreviewEnabled = PropertiesUtil.toBoolean(properties.get(BootstrapConstants.PREVIEW_ENABLED), false);
         
+        isPseudoLocalizationDisabled = PropertiesUtil.toBoolean(properties.get(BootstrapConstants.PSEUDO_L10N_DISABLED), false);
+        
         exportFormat = PropertiesUtil.toString(properties.get(BootstrapConstants.EXPORT_FORMAT_FIELD), BootstrapConstants.EXPORT_FORMAT_XML);
         if (log.isTraceEnabled()) {
             log.trace("Activated TSF with the following:");
             log.trace("Factory Name: {}", factoryName);
             log.trace("Preview Enabled: {}",isPreviewEnabled);
+            log.trace("Psuedo Localization Disabled: {}",isPseudoLocalizationDisabled);
             log.trace("Export Format: {}", exportFormat);
         }
     }
