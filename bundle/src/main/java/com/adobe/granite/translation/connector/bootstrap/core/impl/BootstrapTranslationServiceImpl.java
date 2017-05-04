@@ -250,6 +250,8 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         throws TranslationException {
     	if(strTranslationJobID=="dummy"){
     		log.debug("Dummy Translation job detected");
+    	} else if(strTranslationJobID == null) {
+    		log.debug("Job was never sent to TMS. Updated using Export/Import");
     	} else {
     		bootstrapTmsService.setTmsProperty(strTranslationJobID, BootstrapTmsConstants.BOOTSTRAP_TMS_STATUS, state.getStatus().toString());
     		log.warn("JOB ID is {}",strTranslationJobID);
