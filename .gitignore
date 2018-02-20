@@ -40,6 +40,8 @@ local.properties
 .project
 .classpath
 *.prefs
+ui.apps/src/main/content/jcr_root/META-INF/
+
 
 # External tool builders
 .externalToolBuilders/

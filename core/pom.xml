@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- |  Copyright 2015 Adobe Systems Incorporated
+ |  Copyright 2017 Adobe Systems Incorporated
  |
  |  Licensed under the Apache License, Version 2.0 (the "License");
  |  you may not use this file except in compliance with the License.
@@ -20,18 +20,18 @@
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
         <artifactId>bootstrap-connector</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>bootstrap-connector.bundle</artifactId>
+    <artifactId>bootstrap-connector.core</artifactId>
     <packaging>bundle</packaging>
-    <name>Bootstrap Translation Connector - Bundle</name>
+    <name>Bootstrap Translation Connector - Core</name>
     <description>Core bundle for Bootstrap Translation Connector</description>
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>maven-sling-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -39,65 +39,30 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!--
-                        <Embed-Dependency>
-                            artifactId1,
-                            artifactId2;inline=true
-                        </Embed-Dependency>
-                        -->
+                        <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
+                        <Import-Package>javax.inject;version=0.0.0,*</Import-Package>
                         <Export-Package>
                             com.adobe.granite.translation.connector.bootstrap.core
-                        </Export-Package>                        
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <!-- Development profile: install only the bundle -->
-        <profile>
-            <id>autoInstallBundle</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>maven-sling-plugin</artifactId>
-                        <configuration>
-                            <!-- Note that this requires /apps/bootstrap-connector/install to exist!!          -->
-                            <!--    This is typically the case when content is deployed first                -->
-                            <!--    Otherwise, create /apps/bootstrap-connector/install manually (CRXDE|Lite)  -->
-                            <slingUrlSuffix>/apps/bootstrap-connector/install/</slingUrlSuffix>
-                            <failOnError>true</failOnError>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+
     <dependencies>
         <!-- OSGi Dependencies -->
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>biz.aQute</groupId>
-            <artifactId>bndlib</artifactId>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
+            <artifactId>osgi.cmpn</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
+            <artifactId>osgi.annotation</artifactId>
         </dependency>
         <!-- Other Dependencies -->
         <dependency>
@@ -115,19 +80,19 @@
         <dependency>
             <groupId>com.adobe.granite</groupId>
             <artifactId>com.adobe.granite.translation.api</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.adobe.aem</groupId>
             <artifactId>uber-jar</artifactId>
-            <classifier>obfuscated-apis</classifier>
+            <classifier>apis</classifier>
         </dependency>
         <dependency>
             <groupId>com.adobe.granite.translation</groupId>
             <artifactId>bootstrap-tms.core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>2.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../content/src/main/content/jcr_root/apps/bootstrap-connector/install/bootstrap-tms.bundle-1.0-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/../ui.apps/src/main/content/jcr_root/apps/bootstrap-connector/install/bootstrap-tms.core-2.0-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

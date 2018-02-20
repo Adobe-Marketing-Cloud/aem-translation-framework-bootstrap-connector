@@ -13,23 +13,20 @@ written permission of Adobe.
 
 package com.adobe.granite.translation.connector.bootstrap.core.impl.config;
 
+import javax.jcr.Node;
+
+import org.apache.sling.api.adapter.AdapterFactory;
+import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.adobe.granite.translation.api.TranslationException;
 import com.adobe.granite.translation.connector.bootstrap.core.BootstrapTranslationCloudConfig;
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.api.adapter.AdapterFactory;
-import org.apache.sling.api.resource.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-
-@Component
-@Service(value = AdapterFactory.class)
+@Component(service = AdapterFactory.class)
 public class BootstrapTranslationAdapterFactory implements AdapterFactory
 {
     @Reference
@@ -37,16 +34,9 @@ public class BootstrapTranslationAdapterFactory implements AdapterFactory
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final Class<Resource> RESOURCE_CLASS = Resource.class;
-    private static final Class<Node> NODE_CLASS = Node.class;
     private static final Class<BootstrapTranslationCloudConfig> TRANSLATION_CLOUD_CONFIG_CLASS =
         BootstrapTranslationCloudConfig.class;
 
-    @Property(name = "adapters")
-    protected static final String[] ADAPTER_CLASSES = {TRANSLATION_CLOUD_CONFIG_CLASS.getName()};
-
-    @Property(name = "adaptables")
-    protected static final String[] ADAPTABLE_CLASSES = {RESOURCE_CLASS.getName(), NODE_CLASS.getName()};
 
     // ---------- AdapterFactory -----------------------------------------------
 

@@ -11,8 +11,8 @@ The Bootstrap connector is built using the Translation Framework API for AEM 6.4
 
 The main parts of the template are:
 
-* bundle: Java bundle containing all core functionality like OSGi service as well as component-related Java code.
-* content: contains the /apps (and /etc) parts of the project, components, templates, configurations.
+* core: Java bundle containing all core functionality like OSGi service as well as component-related Java code.
+* ui.apps: contains the /apps (and /etc) parts of the project, components, templates, configurations.
 
 ## How to build
 
@@ -28,11 +28,15 @@ Or to deploy it to a publish instance, run
 
     mvn clean install -PautoInstallPackagePublish
     
+Or alternatively
+
+    mvn clean install -PautoInstallPackage -Daem.port=4503
+
 Or to deploy only the bundle to the author, run
 
     mvn clean install -PautoInstallBundle
 
-## Maven settings
+## Additional Details
 
 For detailed information visit:
     
