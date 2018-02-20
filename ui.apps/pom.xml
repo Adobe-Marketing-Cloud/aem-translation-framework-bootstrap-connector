@@ -48,6 +48,12 @@
     <build>
         <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
         <resources>
+          <resource>
+             <!-- we want to keep some of the META-INF files and not configure everything
+                in the plugin. -->
+            <directory>${basedir}/src/main/content/META-INF</directory>
+            <targetPath>../vault-work/META-INF</targetPath>
+          </resource>            
             <!-- define the resources that will go into the package -->
             <resource>
                 <directory>${basedir}/src/main/content/jcr_root</directory>

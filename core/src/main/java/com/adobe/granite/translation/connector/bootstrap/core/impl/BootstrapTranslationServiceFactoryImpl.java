@@ -14,19 +14,15 @@ written permission of Adobe.
 package com.adobe.granite.translation.connector.bootstrap.core.impl;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.PropertyOption;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.service.component.ComponentContext;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,133 +37,124 @@ import com.adobe.granite.translation.bootstrap.tms.core.BootstrapTmsService;
 import com.adobe.granite.translation.connector.bootstrap.core.BootstrapTranslationCloudConfig;
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 
-@Service
-@Component(label = "Bootstrap Translation Connector Factory", metatype = true, immediate = true, description="Configurable settings for the Bootstrap Translation connector")
-@Properties(value = {
-    @Property(name = "service.description", value = "Bootstrap translation service"),
-    @Property(name=BootstrapConstants.PREVIEW_ENABLED, label="Enable Preview", boolValue=false, description="Preview Enabled for Translation Objects"),
-    @Property(name=BootstrapConstants.PSEUDO_L10N_DISABLED, label="Disable Psuedo L10n", boolValue=false, description="Disable Pseudo localization for Machine translations and use a simple Language prefix instead"),
-    @Property(name = TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY, value = "Bootstrap Connector",
-            label = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this "
-                    + "Translation Factory Connector"),
-    @Property(name=BootstrapConstants.EXPORT_FORMAT_FIELD, label="Export Format",value="xml",description="Please specify the format for exporting translation jobs",options={
-    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XML, value = "XML"),
-    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XLIFF_1_2, value = "XLIFF 1.2"),
-    		@PropertyOption(name = BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0, value = "XLIFF 2.0")
-    })
-})
-	
+@Component(service = TranslationServiceFactory.class, immediate = true, configurationPid = "com.adobe.granite.translation.connector.bootstrap.core.impl.BootstrapTranslationServiceFactoryImpl", property = {
+		Constants.SERVICE_DESCRIPTION + "=Configurable settings for the Bootstrap Translation connector",
+		"label" + "=Bootstrap Translation Connector Factory" })
+
+@Designate(ocd=BootstrapServiceConfiguration.class)
 public class BootstrapTranslationServiceFactoryImpl implements TranslationServiceFactory {
 
-    protected String factoryName;
-    
-    protected Boolean isPreviewEnabled;
-    
-    protected Boolean isPseudoLocalizationDisabled;
-    
-    protected String exportFormat;
+	protected String factoryName;
 
-    @Reference
-    TranslationCloudConfigUtil cloudConfigUtil;
+	protected Boolean isPreviewEnabled;
 
-    @Reference
-    TranslationConfig translationConfig;
-    
-    @Reference
-    CryptoSupport cryptoSupport;
-    
-    @Reference
-    BootstrapTmsService bootstrapTmsService;
+	protected Boolean isPseudoLocalizationDisabled;
 
-    private List<TranslationMethod> supportedTranslationMethods;
+	protected String exportFormat;
 
-    public BootstrapTranslationServiceFactoryImpl()
-    {
-        log.trace("BootstrapTranslationServiceFactoryImpl.");
+	@Reference
+	TranslationCloudConfigUtil cloudConfigUtil;
 
-        supportedTranslationMethods = new ArrayList<TranslationMethod>();
-        supportedTranslationMethods.add(TranslationMethod.HUMAN_TRANSLATION);
-        supportedTranslationMethods.add(TranslationMethod.MACHINE_TRANSLATION);
-    }
+	@Reference
+	TranslationConfig translationConfig;
 
-    private static final Logger log = LoggerFactory.getLogger(BootstrapTranslationServiceFactoryImpl.class);
+	@Reference
+	CryptoSupport cryptoSupport;
 
-    @Override
-    public TranslationService createTranslationService(TranslationMethod translationMethod, String cloudConfigPath)
-        throws TranslationException
-    {
-        log.trace("BootstrapTranslationServiceFactoryImpl.createTranslationService");
+	@Reference
+	BootstrapTmsService bootstrapTmsService;
 
-        BootstrapTranslationCloudConfig bootstrapCloudConfg =
-            (BootstrapTranslationCloudConfig) cloudConfigUtil.getCloudConfigObjectFromPath(
-                    BootstrapTranslationCloudConfig.class, cloudConfigPath);
+	private List<TranslationMethod> supportedTranslationMethods;
 
-        String dummyConfigId = "";
-        String dummyServerUrl = "";
-        String previewPath = "";
-        
-        if (bootstrapCloudConfg != null)
-        {
-            dummyConfigId = bootstrapCloudConfg.getDummyConfigId();
-            dummyServerUrl = bootstrapCloudConfg.getDummyServerUrl();
-            previewPath = bootstrapCloudConfg.getPreviewPath();
-            
-        }
-        
-        if (cryptoSupport != null) {
-            try {
-                if(cryptoSupport.isProtected(dummyConfigId)) {
-                    dummyConfigId=cryptoSupport.unprotect(dummyConfigId);
-                }else {
-                    log.trace("Dummy Config ID is not protected");
-                }
-            }catch (CryptoException e) {
-                log.error("Error while decrypting the client secret {}", e);
-            }
-        }
+	private BootstrapServiceConfiguration config;
 
-        Map<String, String> availableLanguageMap = new HashMap<String, String>();
-        Map<String, String> availableCategoryMap = new HashMap<String, String>();
-        return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName, isPreviewEnabled, isPseudoLocalizationDisabled, exportFormat, dummyConfigId, dummyServerUrl, previewPath,
-             translationConfig, bootstrapTmsService);
-    }
+	
+	public BootstrapTranslationServiceFactoryImpl() {
+		log.trace("BootstrapTranslationServiceFactoryImpl.");
 
-    @Override
-    public List<TranslationMethod> getSupportedTranslationMethods() {
-        log.trace("BootstrapTranslationServiceFactoryImpl.getSupportedTranslationMethods");
-        return supportedTranslationMethods;
-    }
+		supportedTranslationMethods = new ArrayList<TranslationMethod>();
+		supportedTranslationMethods.add(TranslationMethod.HUMAN_TRANSLATION);
+		supportedTranslationMethods.add(TranslationMethod.MACHINE_TRANSLATION);
+	}
 
-    @Override
-    public Class<?> getServiceCloudConfigClass() {
-        log.trace("BootstrapTranslationServiceFactoryImpl.getServiceCloudConfigClass");
-        return BootstrapTranslationCloudConfig.class;
-    }
+	private static final Logger log = LoggerFactory.getLogger(BootstrapTranslationServiceFactoryImpl.class);
 
-    protected void activate(final ComponentContext ctx) {
-        log.trace("Starting function: activate");
-        final Dictionary<?, ?> properties = ctx.getProperties();
+	@Override
+	public TranslationService createTranslationService(TranslationMethod translationMethod, String cloudConfigPath)
+			throws TranslationException {
+		log.trace("BootstrapTranslationServiceFactoryImpl.createTranslationService");
 
-        factoryName =
-            PropertiesUtil.toString(properties.get(TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY),"");
+		BootstrapTranslationCloudConfig bootstrapCloudConfg = (BootstrapTranslationCloudConfig) cloudConfigUtil
+				.getCloudConfigObjectFromPath(BootstrapTranslationCloudConfig.class, cloudConfigPath);
 
-        isPreviewEnabled = PropertiesUtil.toBoolean(properties.get(BootstrapConstants.PREVIEW_ENABLED), false);
-        
-        isPseudoLocalizationDisabled = PropertiesUtil.toBoolean(properties.get(BootstrapConstants.PSEUDO_L10N_DISABLED), false);
-        
-        exportFormat = PropertiesUtil.toString(properties.get(BootstrapConstants.EXPORT_FORMAT_FIELD), BootstrapConstants.EXPORT_FORMAT_XML);
-        if (log.isTraceEnabled()) {
-            log.trace("Activated TSF with the following:");
-            log.trace("Factory Name: {}", factoryName);
-            log.trace("Preview Enabled: {}",isPreviewEnabled);
-            log.trace("Psuedo Localization Disabled: {}",isPseudoLocalizationDisabled);
-            log.trace("Export Format: {}", exportFormat);
-        }
-    }
-    
-    @Override
-    public String getServiceFactoryName() {
-        log.trace("Starting function: getServiceFactoryName");
-        return factoryName;
-    }
+		String dummyConfigId = "";
+		String dummyServerUrl = "";
+		String previewPath = "";
+
+		if (bootstrapCloudConfg != null) {
+			dummyConfigId = bootstrapCloudConfg.getDummyConfigId();
+			dummyServerUrl = bootstrapCloudConfg.getDummyServerUrl();
+			previewPath = bootstrapCloudConfg.getPreviewPath();
+
+		}
+
+		if (cryptoSupport != null) {
+			try {
+				if (cryptoSupport.isProtected(dummyConfigId)) {
+					dummyConfigId = cryptoSupport.unprotect(dummyConfigId);
+				} else {
+					log.trace("Dummy Config ID is not protected");
+				}
+			} catch (CryptoException e) {
+				log.error("Error while decrypting the client secret {}", e);
+			}
+		}
+
+		Map<String, String> availableLanguageMap = new HashMap<String, String>();
+		Map<String, String> availableCategoryMap = new HashMap<String, String>();
+		return new BootstrapTranslationServiceImpl(availableLanguageMap, availableCategoryMap, factoryName,
+				isPreviewEnabled, isPseudoLocalizationDisabled, exportFormat, dummyConfigId, dummyServerUrl,
+				previewPath, translationConfig, bootstrapTmsService);
+	}
+
+	@Override
+	public List<TranslationMethod> getSupportedTranslationMethods() {
+		log.trace("BootstrapTranslationServiceFactoryImpl.getSupportedTranslationMethods");
+		return supportedTranslationMethods;
+	}
+
+	@Override
+	public Class<?> getServiceCloudConfigClass() {
+		log.trace("BootstrapTranslationServiceFactoryImpl.getServiceCloudConfigClass");
+		return BootstrapTranslationCloudConfig.class;
+	}
+
+	@Activate
+	protected void activate(BootstrapServiceConfiguration config) {
+		log.trace("Starting function: activate");
+
+		this.config = config;
+
+		factoryName = config.getTranslationFactory();
+
+		isPreviewEnabled = config.isPreviewEnabled();
+
+		isPseudoLocalizationDisabled = config.isPseudoLocalizationDisabled();
+
+		exportFormat = config.getExportFormat();
+
+		if (log.isTraceEnabled()) {
+			log.trace("Activated TSF with the following:");
+			log.trace("Factory Name: {}", factoryName);
+			log.trace("Preview Enabled: {}", isPreviewEnabled);
+			log.trace("Psuedo Localization Disabled: {}", isPseudoLocalizationDisabled);
+			log.trace("Export Format: {}", exportFormat);
+		}
+	}
+
+	@Override
+	public String getServiceFactoryName() {
+		log.trace("Starting function: getServiceFactoryName");
+		return factoryName;
+	}
 }
