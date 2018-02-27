@@ -42,7 +42,7 @@
                         <!-- Import any version of javax.inject, to allow running on multiple versions of AEM -->
                         <Import-Package>javax.inject;version=0.0.0,*</Import-Package>
                         <Export-Package>
-                            com.adobe.granite.translation.connector.bootstrap.core
+                            com.adobe.granite.translation.connector.bootstrap.*
                         </Export-Package>
                         <Sling-Model-Packages>
                             com.adobe.granite.translation.connector.bootstrap.ui.models
@@ -79,11 +79,6 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.granite</groupId>
-            <artifactId>com.adobe.granite.translation.api</artifactId>
-            <version>1.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.adobe.aem</groupId>
