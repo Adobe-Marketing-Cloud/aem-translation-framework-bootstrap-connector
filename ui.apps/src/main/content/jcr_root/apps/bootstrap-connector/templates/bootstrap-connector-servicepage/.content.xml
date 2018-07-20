@@ -10,5 +10,5 @@
     <jcr:content
         cq:cloudservicename="bootstrap-translation"
         jcr:primaryType="cq:PageContent"
-        sling:resourceType="bootstrap-connector/components/bootstrap-connector-cloudconfig"/>
+        sling:resourceType="cq/translation/components/mt-cloudconfig"/>
 </jcr:root>

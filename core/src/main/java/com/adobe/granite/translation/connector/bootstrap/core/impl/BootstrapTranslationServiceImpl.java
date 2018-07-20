@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -214,10 +215,8 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
     public void storeTranslation(String[] originalText, String sourceLanguage, String targetLanguage,
         String[] updatedTranslation, TranslationConstants.ContentType contentType, String contentCategory,
         String userId, int rating, String path) throws TranslationException {
-        log.trace("BootstrapTranslationServiceImpl.storeTranslation");
-
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
+        log.trace("BootstrapTranslationServiceImpl.storeTranslation[]");
+        log.debug("OriginalText is {}. Updated Transation is {}",Arrays.toString(originalText),updatedTranslation);
     }
 
     @Override
@@ -225,9 +224,6 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         String updatedTranslation, TranslationConstants.ContentType contentType, String contentCategory,
         String userId, int rating, String path) throws TranslationException {
         log.trace("BootstrapTranslationServiceImpl.storeTranslation");
-
-        throw new TranslationException("This function is not implemented",
-            TranslationException.ErrorCode.SERVICE_NOT_IMPLEMENTED);
     }
 
     @Override
