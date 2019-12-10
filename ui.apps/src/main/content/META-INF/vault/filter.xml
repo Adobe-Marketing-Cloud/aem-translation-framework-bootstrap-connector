@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
     <filter root="/apps/bootstrap-connector"/>
-    <filter root="/conf/global/settings/cloudconfigs/translation/bootstrap-translation" mode="update"/>
-    <filter root="/home/users/system/bootstrap-service"/>    
-    <filter root="/var/bootstrap-tms"/>
+    <filter root="/apps/settings/cloudconfigs/translation/bootstrap-translation" mode="update"/>
 </workspaceFilter>

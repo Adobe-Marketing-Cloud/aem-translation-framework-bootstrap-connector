@@ -26,6 +26,7 @@
     <modules>
         <module>core</module>
         <module>ui.apps</module>
+        <module>ui.content</module>
     </modules>
 
     <scm>
@@ -34,6 +35,15 @@
         <url>https://github.com/Adobe-Marketing-Cloud/aem-translation-framework-bootstrap-connector</url>
         <tag>HEAD</tag>
     </scm>
+
+    <!-- Local Maven Repository -->
+    <repositories>
+        <repository>
+            <id>project.local</id>
+            <name>project</name>
+            <url>file:///${project.basedir}/repository</url>
+        </repository>
+    </repositories>
 
     <properties>
         <aem.host>localhost</aem.host>
@@ -137,6 +147,24 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.0.0</version>
+                </plugin>
+                <!-- Maven SCR Plugin -->
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-scr-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>generate-scr-scrdescriptor</id>
+                            <goals>
+                                <goal>scr</goal>
+                            </goals>
+                            <configuration>
+                                <properties>
+                                    <service.vendor>Adobe Systems Incorporated</service.vendor>
+                                </properties>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <!-- Maven Resources Plugin -->
                 <plugin>
@@ -479,6 +507,12 @@
         <dependencies>
             <!-- OSGi Dependencies -->
             <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr.annotations</artifactId>
+                <version>1.9.6</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.core</artifactId>
                 <version>6.0.0</version>
@@ -507,7 +541,7 @@
             <dependency>
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
-                <version>6.3.0</version>
+                <version>6.5.2</version>
                 <classifier>apis</classifier>
                 <scope>provided</scope>
             </dependency>
@@ -538,6 +572,12 @@
                 <artifactId>cq-wcm-taglib</artifactId>
                 <version>5.7.4</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- Bootstrap TMS -->
+            <dependency>
+                <groupId>com.adobe.granite.translation</groupId>
+                <artifactId>bootstrap-tms.core</artifactId>
+                <version>4.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

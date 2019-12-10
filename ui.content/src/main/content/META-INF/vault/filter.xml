@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/home/users/system/bootstrap-service"/>
+    <filter root="/var/bootstrap-tms"/>
+</workspaceFilter>

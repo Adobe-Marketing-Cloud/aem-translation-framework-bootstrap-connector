@@ -17,6 +17,9 @@ public class BootstrapConstants {
 	
 	/** The Constant EXPORT_FORMAT_XLIFF_2_0. */
 	public static final String EXPORT_FORMAT_XLIFF_2_0 = "xliff_2.0";
+
+	/** The Constant EXPORT JSON  */
+	public static final String EXPORT_FORMAT_JSON = "json";
 	
 	/** The Constant PREVIEW_ENABLED. */
 	public static final String PREVIEW_ENABLED = "preview.enabled";

@@ -35,13 +35,6 @@
     <name>Bootstrap Translation Connector - UI apps</name>
     <description>Bootstrap connector implementation for the Granite Translation API. This connector provides a reference implementation of the API. Please visit www.adobe.com for more details.</description>
 
-    <!-- <scm>
-        <connection></connection>
-        <developerConnection></developerConnection>
-        <url></url>
-        <tag>HEAD</tag>
-    </scm-->
-
     <!-- ====================================================================== -->
     <!-- B U I L D   D E F I N I T I O N                                        -->
     <!-- ====================================================================== -->
@@ -99,14 +92,25 @@
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>com.adobe.granite.translation.connector</group>
-                    <name>AEM Bootstrap Translation Connector</name>
                     <embeddeds>
                         <embedded>
                             <groupId>com.adobe.granite.translation.connector</groupId>
                             <artifactId>bootstrap-connector.core</artifactId>
                             <target>/apps/bootstrap-connector/install</target>
                         </embedded>
+                        <embedded>
+                            <groupId>com.adobe.granite.translation</groupId>
+                            <artifactId>bootstrap-tms.core</artifactId>
+                            <target>/apps/bootstrap-connector/install</target>
+                        </embedded>
                     </embeddeds>
+                    <dependencies>
+                        <dependency>
+                            <group>com.adobe.granite.translation.connector</group>
+                            <name>bootstrap-connector.ui.content</name>
+                            <version>[${project.version},)</version>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
         </plugins>
@@ -141,6 +145,11 @@
         <dependency>
             <groupId>com.day.cq.wcm</groupId>
             <artifactId>cq-wcm-taglib</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.granite.translation</groupId>
+            <artifactId>bootstrap-tms.core</artifactId>
         </dependency>
     </dependencies>
 </project>
