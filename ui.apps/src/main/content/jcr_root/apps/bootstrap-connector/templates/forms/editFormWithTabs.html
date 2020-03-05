@@ -1,0 +1,50 @@
+<!--/* Not used by Bootstrap connector, to be used by partners having requirement of multiple tabs in their edit form */-->
+
+<sly data-sly-use.config="${'com.adobe.granite.translation.connector.bootstrap.ui.models.BootStrapTranslationConnectorModel'}">
+
+    <!--/* form id should always be services-editor-form, data-foundation-form-ajax and data-foundation-form-loadingmask are used to auto submit the form on save and close  */-->
+    <form id="services-editor-form" method="post" action="${config.formPostPath}" class="coral-form coral-Form--vertical foundation-form" data-foundation-form-ajax="true" data-foundation-form-loadingmask="true">
+
+        <!--/* First Load the client library {js, css} both */-->
+        <sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html" />
+        <sly data-sly-call="${clientlib.js @ categories='aem.bootstrap.connector'}" />
+        <sly data-sly-call="${clientlib.css @ categories='aem.bootstrap.connector'}" />
+
+
+        <!--/* Title of the Edit form */-->
+        <h3 class="form-legend">${'Bootstrap Translation Connector Settings' @i18n, locale=request.locale}</h3>
+
+        <!--/* Sample form with two tabs -- basic and advance */-->
+        <coral-tabview>
+            <coral-tablist target="formbuilder-properties--tab">
+                <coral-tab id="tab-basic">${'Basic' @i18n, locale=request.locale}</coral-tab>
+                <coral-tab id="tab-advaned">${'Advanced' @i18n, locale=request.locale}</coral-tab>
+            </coral-tablist>
+            <coral-panelstack id="formbuilder-properties--tab">
+                <coral-panel id="tab-basic">
+
+                    <!--/* Input field with label and input area */-->
+                    <label class="fieldlabel">${'Dummy Server URL' @i18n, locale=request.locale} </label>
+                    <input class="inputTextField" type="text" placeholder="${'Use the API/Endpoint URL here' @i18n, locale=request.locale}" name="./dummyserverurl" value="${config.serverUrl}" is="coral-textfield" aria-invalid="false">
+
+                    <!--/* Input field with label and input area */-->
+                    <label class="fieldlabel">${'Dummy Service ID' @i18n, locale=request.locale} </label>
+                    <input class="inputTextField bootStrapServerID" type="text" is="coral-textfield" required="true" placeholder="${'Use a customer specific Configuration/Service ID here' @i18n, locale=request.locale}" name="./dummyconfigid" value="${config.serviceId}">
+
+                </coral-panel>
+                <coral-panel id="tab-advanced">
+
+                    <!--/* Input field with label and input area */-->
+                    <label class="fieldlabel">${'Target Directory for Preview Content' @i18n, locale=request.locale} </label>
+                    <input class="inputTextField" type="text" is="coral-textfield" placeholder="${'Make sure to enable preview in the Web console for the Bootstrap Translation Factory' @i18n, locale=request.locale}" name="./previewPath" value="${config.previewDirectory}">
+
+                </coral-panel>
+            </coral-panelstack>
+        </coral-tabview>
+
+    </form>
+
+    <!--/* Any button if required, available variants = {"primary", "secondary"} */-->
+    <button is="coral-button" class="checkSomeCondition" iconsize="S" variant="primary" >${'Connect' @i18n, locale=request.locale} </button>
+
+</sly>

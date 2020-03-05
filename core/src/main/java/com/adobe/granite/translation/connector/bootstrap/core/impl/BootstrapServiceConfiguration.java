@@ -1,7 +1,6 @@
 package com.adobe.granite.translation.connector.bootstrap.core.impl;
 
 import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.osgi.service.metatype.annotations.Option;
 
@@ -19,7 +18,8 @@ public @interface BootstrapServiceConfiguration {
 
 	@AttributeDefinition(name = "Export Format", description = "Number values", options = { @Option(label = "XML", value = BootstrapConstants.EXPORT_FORMAT_XML),
 			@Option(label = "XLIFF 1.2", value = BootstrapConstants.EXPORT_FORMAT_XLIFF_1_2),
-			@Option(label = "XLIFF 2.0", value = BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0)})
+			@Option(label = "XLIFF 2.0", value = BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0),
+	        @Option(label = "JSON", value = BootstrapConstants.EXPORT_FORMAT_JSON)})
 	String getExportFormat() default BootstrapConstants.EXPORT_FORMAT_XML;
 	
 }

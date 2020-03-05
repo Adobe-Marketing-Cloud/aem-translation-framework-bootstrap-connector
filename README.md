@@ -12,7 +12,8 @@ The Bootstrap connector is built using the Translation Framework API for AEM 6.4
 The main parts of the template are:
 
 * core: Java bundle containing all core functionality like OSGi service as well as component-related Java code.
-* ui.apps: contains the /apps (and /etc) parts of the project, components, templates, configurations.
+* ui.apps: contains the /apps (immutable content) parts of the project, components, templates, configurations.
+* ui.content: contains the /content (mutable content) parts of the project.
 
 ## How to build
 
