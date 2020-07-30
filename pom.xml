@@ -540,9 +540,8 @@
             <!-- Adobe AEM Dependencies -->
             <dependency>
                 <groupId>com.adobe.aem</groupId>
-                <artifactId>uber-jar</artifactId>
-                <version>6.5.2</version>
-                <classifier>apis</classifier>
+                <artifactId>aem-sdk-api</artifactId>
+                <version>2020.7.3902.20200716T022312Z-200604</version>
                 <scope>provided</scope>
             </dependency>
 

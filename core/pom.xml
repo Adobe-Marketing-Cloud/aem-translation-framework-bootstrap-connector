@@ -90,8 +90,7 @@
         </dependency>
         <dependency>
             <groupId>com.adobe.aem</groupId>
-            <artifactId>uber-jar</artifactId>
-            <classifier>apis</classifier>
+            <artifactId>aem-sdk-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>

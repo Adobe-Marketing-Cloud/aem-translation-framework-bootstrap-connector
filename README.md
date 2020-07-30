@@ -15,6 +15,27 @@ The main parts of the template are:
 * ui.apps: contains the /apps (immutable content) parts of the project, components, templates, configurations.
 * ui.content: contains the /content (mutable content) parts of the project.
 
+## Accessing the AEM Cloud Service SDK
+
+The Java Jar/Maven Dependency that exposes all allowed Java APIs that can be used to develop against AEM as as Cloud Service.
+
+```
+<dependency>
+  <groupId>com.adobe.aem</groupId>
+  <artifactId>aem-sdk-api</artifactId>
+  <version>2020.7.3902.20200716T022312Z-200604</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+It is recommended that the version entry for the SDK should match the version of AEM as a Cloud Service.
+You can see what version you are using by logging in to AEM, then going to the question mark in the top right corner of
+the screen and selecting About Adobe Experience Manager
+
+Please have a look on the document to see when is it recommended to refresh the project with a new SDK.
+
+https://docs.adobe.com/content/help/en/experience-manager-cloud-service/implementing/developing/aem-as-a-cloud-service-sdk.html
+
 ## How to build
 
 To build all the modules run in the project root directory the following command with Maven 3:
