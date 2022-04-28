@@ -55,11 +55,11 @@ public class BootStrapTranslationConnectorModel {
      *  Get the server url for the configuration
      */
     public String getServerUrl() {
-        return BootStrapModelUtils.getStringPropertyFromContent(bootStrapConfigResource, BootstrapTranslationCloudConfig.PROPERTY_DUMMY_SERVER_URL, logger);
+        return BootStrapModelUtils.getStringPropertyFromContent(bootStrapConfigResource, BootstrapTranslationCloudConfig.PROPERTY_LILT_SERVER_URL, logger);
     }
 
     public String getServiceId() {
-        return BootStrapModelUtils.getStringPropertyFromContent(bootStrapConfigResource, BootstrapTranslationCloudConfig.PROPERTY_DUMMY_CONFIG_ID, logger);
+        return BootStrapModelUtils.getStringPropertyFromContent(bootStrapConfigResource, BootstrapTranslationCloudConfig.PROPERTY_LILT_CONFIG_ID, logger);
     }
 
     public String getPreviewDirectory() {

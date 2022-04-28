@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslationCloudConfig {
     private static final Logger log = LoggerFactory.getLogger(BootstrapTranslationCloudConfigImpl.class);
 
-    private String dummyServerUrl;
-    private String dummyConfigId;
+    private String liltServerUrl;
+    private String liltConfigId;
     private String previewPath;
 
     public BootstrapTranslationCloudConfigImpl(Resource translationConfigResource) throws TranslationException {
@@ -42,14 +42,14 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
         if (configContent != null) {
             ValueMap properties = configContent.adaptTo(ValueMap.class);
 
-            this.dummyServerUrl = properties.get(PROPERTY_DUMMY_SERVER_URL, "");
-            this.dummyConfigId = properties.get(PROPERTY_DUMMY_CONFIG_ID, "");
+            this.liltServerUrl = properties.get(PROPERTY_LILT_SERVER_URL, "");
+            this.liltConfigId = properties.get(PROPERTY_LILT_CONFIG_ID, "");
             this.previewPath = properties.get(PROPERTY_PREVIEW_PATH, ""); 
 
             if (log.isTraceEnabled()) {
                 log.trace("Created Bootstrap Cloud Config with the following:");
-                log.trace("dummyServerUrl: {}", dummyServerUrl);
-                log.trace("dummyConfigId: {}", dummyConfigId);
+                log.trace("liltServerUrl: {}", liltServerUrl);
+                log.trace("liltConfigId: {}", liltConfigId);
                 log.trace("previewPath: {}", previewPath);
                 
             }
@@ -59,14 +59,14 @@ public class BootstrapTranslationCloudConfigImpl implements BootstrapTranslation
         }
     }
 
-    public String getDummyServerUrl() {
-        log.trace("BootstrapTranslationCloudConfigImpl.getDummyServerUrl");
-        return dummyServerUrl;
+    public String getLiltServerUrl() {
+        log.trace("BootstrapTranslationCloudConfigImpl.getLiltServerUrl");
+        return liltServerUrl;
     }
 
-    public String getDummyConfigId() {
-        log.trace("BootstrapTranslationCloudConfigImpl.getDummyConfigId");
-        return dummyConfigId;
+    public String getLiltConfigId() {
+        log.trace("BootstrapTranslationCloudConfigImpl.getLiltConfigId");
+        return liltConfigId;
     }
     
     public String getPreviewPath(){

@@ -24,12 +24,12 @@
                 <coral-panel id="tab-basic">
 
                     <!--/* Input field with label and input area */-->
-                    <label class="fieldlabel">${'Dummy Server URL' @i18n, locale=request.locale} </label>
-                    <input class="inputTextField" type="text" placeholder="${'Use the API/Endpoint URL here' @i18n, locale=request.locale}" name="./dummyserverurl" value="${config.serverUrl}" is="coral-textfield" aria-invalid="false">
+                    <label class="fieldlabel">${'Lilt Server URL' @i18n, locale=request.locale} </label>
+                    <input class="inputTextField" type="text" placeholder="${'Use the API/Endpoint URL here' @i18n, locale=request.locale}" name="./liltserverurl" value="${config.serverUrl}" is="coral-textfield" aria-invalid="false">
 
                     <!--/* Input field with label and input area */-->
-                    <label class="fieldlabel">${'Dummy Service ID' @i18n, locale=request.locale} </label>
-                    <input class="inputTextField bootStrapServerID" type="text" is="coral-textfield" required="true" placeholder="${'Use a customer specific Configuration/Service ID here' @i18n, locale=request.locale}" name="./dummyconfigid" value="${config.serviceId}">
+                    <label class="fieldlabel">${'Lilt Service ID' @i18n, locale=request.locale} </label>
+                    <input class="inputTextField bootStrapServerID" type="text" is="coral-textfield" required="true" placeholder="${'Use a customer specific Configuration/Service ID here' @i18n, locale=request.locale}" name="./liltconfigid" value="${config.serviceId}">
 
                 </coral-panel>
                 <coral-panel id="tab-advanced">

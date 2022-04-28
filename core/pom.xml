@@ -19,11 +19,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
-        <artifactId>bootstrap-connector</artifactId>
+        <artifactId>lilt-connector</artifactId>
         <version>2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>bootstrap-connector.core</artifactId>
+    <artifactId>lilt-connector.core</artifactId>
     <packaging>bundle</packaging>
     <name>Bootstrap Translation Connector - Core</name>
     <description>Core bundle for Bootstrap Translation Connector</description>
@@ -90,6 +90,14 @@
             <artifactId>org.apache.sling.models.api</artifactId>
             <version>1.1.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
         </dependency>
         <dependency>
             <groupId>com.adobe.granite.translation</groupId>

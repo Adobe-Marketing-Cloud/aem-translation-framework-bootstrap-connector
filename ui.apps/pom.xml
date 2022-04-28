@@ -22,7 +22,7 @@
     <!-- ====================================================================== -->
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
-        <artifactId>bootstrap-connector</artifactId>
+        <artifactId>lilt-connector</artifactId>
         <version>2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -30,10 +30,10 @@
     <!-- ====================================================================== -->
     <!-- P R O J E C T  D E S C R I P T I O N                                   -->
     <!-- ====================================================================== -->
-    <artifactId>bootstrap-connector.ui.apps</artifactId>
+    <artifactId>lilt-connector.ui.apps</artifactId>
     <packaging>content-package</packaging>
     <name>Bootstrap Translation Connector - UI apps</name>
-    <description>Bootstrap connector implementation for the Granite Translation API. This connector provides a reference implementation of the API. Please visit www.adobe.com for more details.</description>
+    <description>Lilt connector implementation for the Granite Translation API.</description>
 
     <!-- <scm>
         <connection></connection>
@@ -99,11 +99,16 @@
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                     <group>com.adobe.granite.translation.connector</group>
-                    <name>AEM Bootstrap Translation Connector</name>
+                    <name>Lilt Translation Connector</name>
+                    <properties>
+                      <description>Lilt content package containing code (/apps).</description>
+                      <!-- overwrite rep:ACE nodes defining policies for lilt-owned service principals -->
+                      <acHandling>merge</acHandling>
+                    </properties>
                     <embeddeds>
                         <embedded>
                             <groupId>com.adobe.granite.translation.connector</groupId>
-                            <artifactId>bootstrap-connector.core</artifactId>
+                            <artifactId>lilt-connector.core</artifactId>
                             <target>/apps/bootstrap-connector/install</target>
                         </embedded>
                     </embeddeds>
@@ -118,7 +123,7 @@
     <dependencies>
         <dependency>
             <groupId>com.adobe.granite.translation.connector</groupId>
-            <artifactId>bootstrap-connector.core</artifactId>
+            <artifactId>lilt-connector.core</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 

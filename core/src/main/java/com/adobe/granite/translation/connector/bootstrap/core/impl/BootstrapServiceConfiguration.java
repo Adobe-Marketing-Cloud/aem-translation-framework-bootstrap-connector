@@ -9,7 +9,7 @@ import org.osgi.service.metatype.annotations.Option;
 public @interface BootstrapServiceConfiguration {
 	
 	@AttributeDefinition(name = "Bootstrap Translation Factory Name", description = "The Unique ID associated with this Translation Factory Connector")
-	String getTranslationFactory() default "Bootstrap Connector";
+	String getTranslationFactory() default "Lilt Connector";
 	
 	@AttributeDefinition(name = "Enable Preview", description="Preview Enabled for Translation Objects")
 	boolean isPreviewEnabled() default false;

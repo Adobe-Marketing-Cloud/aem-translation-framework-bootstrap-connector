@@ -15,16 +15,16 @@ package com.adobe.granite.translation.connector.bootstrap.core;
 
 public interface BootstrapTranslationCloudConfig {
 
-    public static final String PROPERTY_DUMMY_SERVER_URL = "dummyserverurl";
-    public static final String PROPERTY_DUMMY_CONFIG_ID = "dummyconfigid";
+    public static final String PROPERTY_LILT_SERVER_URL = "liltserverurl";
+    public static final String PROPERTY_LILT_CONFIG_ID = "liltconfigid";
     public static final String PROPERTY_PREVIEW_PATH = "previewPath";
 
     public static final String RESOURCE_TYPE = "bootstrap-connector/components/bootstrap-connector-cloudconfig";
-    public static final String ROOT_PATH = "/etc/cloudservices/bootstrap-translation";
+    public static final String ROOT_PATH = "/etc/cloudservices/lilt-translation";
 
-    String getDummyServerUrl();
+    String getLiltServerUrl();
 
-    String getDummyConfigId();
+    String getLiltConfigId();
    
     String getPreviewPath();
 }
