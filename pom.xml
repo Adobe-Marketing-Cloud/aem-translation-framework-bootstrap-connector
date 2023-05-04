@@ -147,6 +147,24 @@
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
+                <!-- Maven SCR Plugin -->
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-scr-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>generate-scr-scrdescriptor</id>
+                            <goals>
+                                <goal>scr</goal>
+                            </goals>
+                            <configuration>
+                                <properties>
+                                    <service.vendor>Adobe Systems Incorporated</service.vendor>
+                                </properties>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!-- Maven Resources Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -523,7 +541,7 @@
             <dependency>
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>aem-sdk-api</artifactId>
-                <version>2020.7.3902.20200716T022312Z-200604</version>
+                <version>2023.4.11835.20230414T234523Z-230200</version>
                 <scope>provided</scope>
             </dependency>
 
