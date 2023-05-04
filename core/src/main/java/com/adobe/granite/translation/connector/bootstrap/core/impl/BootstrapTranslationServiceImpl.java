@@ -359,7 +359,10 @@ public class BootstrapTranslationServiceImpl extends AbstractTranslationService 
         inputStream = translationObject.getTranslationObjectXLIFFInputStream("1.2");
       } else if (exportFormat.equalsIgnoreCase(BootstrapConstants.EXPORT_FORMAT_XLIFF_2_0)) {
         inputStream = translationObject.getTranslationObjectXLIFFInputStream("2.0");
-      } else {
+      } else if (exportFormat.equalsIgnoreCase(BootstrapConstants.EXPORT_FORMAT_JSON)) {
+        inputStream = translationObject.getTranslationObjectJSONInputStream();
+      }
+        else {
         inputStream = translationObject.getTranslationObjectXMLInputStream();
       }
 

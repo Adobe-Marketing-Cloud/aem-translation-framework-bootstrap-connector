@@ -30,6 +30,10 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>maven-sling-plugin</artifactId>
             </plugin>
@@ -55,6 +59,10 @@
 
     <dependencies>
         <!-- OSGi Dependencies -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
@@ -82,14 +90,18 @@
         </dependency>
         <dependency>
             <groupId>com.adobe.aem</groupId>
-            <artifactId>uber-jar</artifactId>
-            <classifier>apis</classifier>
+            <artifactId>aem-sdk-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.models.api</artifactId>
             <version>1.1.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
         </dependency>
         <dependency>
           <groupId>org.apache.httpcomponents</groupId>
@@ -102,9 +114,6 @@
         <dependency>
             <groupId>com.adobe.granite.translation</groupId>
             <artifactId>bootstrap-tms.core</artifactId>
-            <version>2.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../ui.apps/src/main/content/jcr_root/apps/bootstrap-connector/install/bootstrap-tms.core-2.0-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

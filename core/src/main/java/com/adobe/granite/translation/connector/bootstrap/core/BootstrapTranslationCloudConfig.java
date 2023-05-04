@@ -19,7 +19,7 @@ public interface BootstrapTranslationCloudConfig {
     public static final String PROPERTY_LILT_CONFIG_ID = "liltconfigid";
     public static final String PROPERTY_PREVIEW_PATH = "previewPath";
 
-    public static final String RESOURCE_TYPE = "bootstrap-connector/components/bootstrap-connector-cloudconfig";
+    public static final String RESOURCE_TYPE = "cq/translation/components/mt-cloudconfig";
     public static final String ROOT_PATH = "/etc/cloudservices/lilt-translation";
 
     String getLiltServerUrl();

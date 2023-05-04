@@ -112,6 +112,13 @@
                             <target>/apps/bootstrap-connector/install</target>
                         </embedded>
                     </embeddeds>
+                    <dependencies>
+                        <dependency>
+                            <group>com.adobe.granite.translation.connector</group>
+                            <name>bootstrap-connector.ui.content</name>
+                            <version>[${project.version},)</version>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
         </plugins>
@@ -129,8 +136,7 @@
 
         <dependency>
             <groupId>com.adobe.aem</groupId>
-            <artifactId>uber-jar</artifactId>
-            <classifier>apis</classifier>
+            <artifactId>aem-sdk-api</artifactId>
         </dependency>
 
         <dependency>
@@ -146,6 +152,11 @@
         <dependency>
             <groupId>com.day.cq.wcm</groupId>
             <artifactId>cq-wcm-taglib</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.granite.translation</groupId>
+            <artifactId>bootstrap-tms.core</artifactId>
         </dependency>
     </dependencies>
 </project>
