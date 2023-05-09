@@ -36,6 +36,15 @@ Please have a look on the document to see when is it recommended to refresh the 
 
 https://docs.adobe.com/content/help/en/experience-manager-cloud-service/implementing/developing/aem-as-a-cloud-service-sdk.html
 
+## Targeting other AEM versions
+
+This repo contains separate branches for supporting different versions of AEM.
+Be sure to check the available branches and use the one appropriate for the AEM
+version you are targeting.
+
+For example here is the branch you should use if you are targeting AEM 6.5.0
+https://github.com/Adobe-Marketing-Cloud/aem-translation-framework-bootstrap-connector/tree/aem650
+
 ## How to build
 
 To build all the modules run in the project root directory the following command with Maven 3:
