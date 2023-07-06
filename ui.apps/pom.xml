@@ -117,6 +117,13 @@
                             <target>/apps/bootstrap-connector/install</target>
                         </embedded>
                     </embeddeds>
+                    <dependencies>
+                        <dependency>
+                            <group>com.adobe.granite.translation.connector</group>
+                            <name>lilt-connector.ui.content</name>
+                            <version>[${project.version},)</version>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
         </plugins>

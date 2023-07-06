@@ -2,7 +2,7 @@
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:description="Account settings for the Bootstrap Translation Connector"
     jcr:primaryType="cq:Template"
-    jcr:title="Bootstrap Translation connector configuration"
+    jcr:title="Lilt Translation connector configuration"
     sling:resourceSuperType="cq/cloudserviceconfigs/templates/configpage"
     allowedChildren="[/apps/bootstrap-connector/templates/bootstrap-connector-servicepage]"
     allowedPaths="[/etc/cloudservices/bootstrap-translation(/.*)?]"
