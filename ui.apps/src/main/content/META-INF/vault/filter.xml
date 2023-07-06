@@ -3,7 +3,5 @@
     <filter root="/apps/bootstrap-connector"/>
     <filter root="/content/rep:policy" mode="update"/>
     <filter root="/conf/rep:policy" mode="update"/>
-    <filter root="/settings/cloudconfigs/translation/lilt-translation" mode="update"/>
-    <filter root="/home/users/system/bootstrap-service"/>
-    <filter root="/var/bootstrap-tms"/>
+    <filter root="/apps/settings/cloudconfigs/translation/lilt-translation" mode="update"/>
 </workspaceFilter>
