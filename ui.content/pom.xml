@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
         <artifactId>lilt-connector</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -31,7 +31,7 @@
     <!-- P R O J E C T  D E S C R I P T I O N                                   -->
     <!-- ====================================================================== -->
     <artifactId>lilt-connector.ui.content</artifactId>
-    <version>2.0-SNAPSHOT</version>
+
     <packaging>content-package</packaging>
     <name>Bootstrap Translation Connector - UI contents</name>
 

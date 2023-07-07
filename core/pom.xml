@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
         <artifactId>lilt-connector</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>lilt-connector.core</artifactId>

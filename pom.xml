@@ -20,7 +20,7 @@
     <artifactId>lilt-connector</artifactId>
     <name>Lilt Translation Connector</name>
     <packaging>pom</packaging>
-    <version>2.0-SNAPSHOT</version>
+    <version>1.0</version>
     <description>Lilt Translation Connector</description>
 
     <modules>
