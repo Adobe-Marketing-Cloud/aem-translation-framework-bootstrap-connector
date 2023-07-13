@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.adobe.granite.translation.connector</groupId>
         <artifactId>lilt-connector</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>lilt-connector.core</artifactId>
@@ -114,6 +114,7 @@
         <dependency>
             <groupId>com.adobe.granite.translation</groupId>
             <artifactId>bootstrap-tms.core</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

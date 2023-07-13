@@ -20,7 +20,7 @@
     <artifactId>lilt-connector</artifactId>
     <name>Lilt Translation Connector</name>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <description>Lilt Translation Connector</description>
 
     <modules>
@@ -590,6 +590,7 @@
                 <groupId>com.adobe.granite.translation</groupId>
                 <artifactId>bootstrap-tms.core</artifactId>
                 <version>4.0</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
